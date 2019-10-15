@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/10/13 19:51:19 by mapandel         ###   ########.fr        #
+#    Updated: 2019/10/16 00:03:14 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ CFLAGS = 	-Wall -Wextra -Werror -Weverything
 #			Sources
 
 SRC =		sources/main.c \
+			sources/parsing.c \
 
 OBJ =		$(SRC:.c=.o)
 
@@ -28,6 +29,8 @@ INC =		includes
 #			Library Path
 
 LIBPATH =	libft/libft.a
+
+LIBINC	=	libft/includes
 
 #			Colors
 
@@ -46,32 +49,60 @@ WHI =		\033[37m
 
 #			Main Rules
 
-.PHONY: all re glu clean fclean
+$(NAME): $(LIBPATH) $(OBJ)
+	@make compile_message
+	@make ecompile
 
-$(NAME):
-	@cd libft; $(MAKE) -f Makefile
-	@echo "$(CYA)--::Compil Ft_ssl::--$(DEF)"
-	@make $(OBJ)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBPATH)
-
+.PHONY: all
 all: $(NAME)
 
+.PHONY: re
 re: fclean all
 
+.PHONY: glu
 glu: fclean all clean
 
 #			Compilation Rules
 
+$(LIBPATH):
+	@cd libft; $(MAKE) -f Makefile
+
 %.o: %.c
-	$(CC) $(CFLAGS) -I $(INC) -c -o $@ $^
+	$(CC) $(CFLAGS) -I $(INC) -I $(LIBINC) -c -o $@ $^
+
+ecompile:
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBPATH)
 
 #			Clean Rules
 
-clean:
+.PHONY: lclean
+lclean:
 	@cd libft; $(MAKE) -f Makefile clean
-	@echo "$(PUR)--::Binary Delection::--$(DEF)"
+
+.PHONY: lfclean
+lfclean:
+	@cd libft; $(MAKE) -f Makefile fclean
+
+.PHONY: clean
+clean: lclean
+	@make clean_message
 	@rm -rf $(OBJ)
 
+.PHONY: fclean
 fclean: clean
-	@echo "$(RED)--::Executable and Library Delection::--$(DEF)"
+	@make fclean_message
 	@rm -rf $(NAME) $(LIBPATH)
+
+#			Display
+
+.PHONY: compile_message
+compile_message:
+	@echo "$(CYA)--::Compiled Ft_ssl::--$(DEF)"
+
+.PHONY: clean_message
+clean_message:
+	@echo "$(PUR)--::Binary Delection::--$(DEF)"
+
+.PHONY: fclean_message
+fclean_message:
+	@echo "$(RED)--::Executable and Library Delection::--$(DEF)"
