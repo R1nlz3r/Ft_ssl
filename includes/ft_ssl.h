@@ -6,15 +6,23 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/16 00:30:33 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/10/17 02:06:40 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 
+#include "libft.h"
 #include "ft_printf.h"
 
-int		parsing (int argc, char **argv);
+typedef struct		s_ssl {
+	char		**files;
+	char		*command_name;
+	int			flags;
+	int			pad_0;
+}					t_ssl;
+
+t_ssl				*parsing (t_ssl *ssl, int argc, char **argv);
 
 # endif
