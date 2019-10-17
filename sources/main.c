@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:21 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/17 02:09:07 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/10/18 01:43:37 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void		del_t_ssl(t_ssl *ssl) {
 	if (ssl) {
 		if (ssl->command_name)
 			ft_strdel(&ssl->command_name);
+		if (ssl->files)
+			ft_strmapdel(&ssl->files);
 		ft_memdel((void**)&ssl);
 	}
 }

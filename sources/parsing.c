@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/18 01:18:20 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/10/18 01:41:45 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static t_ssl		*parsing_flags(t_ssl *ssl, int argc, char **argv) {
 	}
 
 	// parsing files
-	if (!(ssl->files = ft_strmapdup((const char**)(&argv[i]))))
+	if (!(ssl->files = ft_strmapdup((const char**)(unsigned long)(&argv[i]))))
 		return (NULL);
 
 	return (ssl);
