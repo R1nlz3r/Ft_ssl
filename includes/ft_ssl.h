@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/17 02:06:40 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/10/18 11:20:14 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct		s_ssl {
 	int			pad_0;
 }					t_ssl;
 
+void				*del_t_ssl(t_ssl *ssl);
 t_ssl				*parsing (t_ssl *ssl, int argc, char **argv);
 
 # endif

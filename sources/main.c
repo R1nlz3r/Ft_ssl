@@ -6,13 +6,13 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:21 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/18 01:43:37 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/10/18 11:20:05 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-static void		del_t_ssl(t_ssl *ssl) {
+void			*del_t_ssl(t_ssl *ssl) {
 	if (ssl) {
 		if (ssl->command_name)
 			ft_strdel(&ssl->command_name);
@@ -20,6 +20,7 @@ static void		del_t_ssl(t_ssl *ssl) {
 			ft_strmapdel(&ssl->files);
 		ft_memdel((void**)&ssl);
 	}
+	return (NULL);
 }
 
 static t_ssl	*init_t_ssl(t_ssl *ssl) {
@@ -45,9 +46,14 @@ int				main (int argc, char **argv) {
 	// choose the algorithm
 		// execute the algorithm
 
+	for (size_t i = 0; i < ft_strmaplen((const char**)(unsigned long)ssl->files); ++i) {
+		ft_printf("%s\n", ssl->files[i]);
+	}
+
 	//free
 	del_t_ssl(ssl);
 
+	// ssl = NULL;
 	// while(1 < 2) {}
 	return (0);
 }
