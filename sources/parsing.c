@@ -6,98 +6,213 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/10/18 12:15:21 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/21 23:42:56 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-static void		*parsing_error_display(t_ssl *ssl, int display_code,
+/*
+**	parsing_error_display:
+**		***
+*/
+
+static int		parsing_error_display(t_ssl *ssl, int error_code,
 	char *justification) {
-	// nothing passed
-	if (display_code == 1)
+	// No argument passed
+	if (error_code == ERR_NO_ARG)
 		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
-	// invalid command
-	else if (display_code == 2) {
+
+	// Invalid command name
+	else if (error_code == ERR_INVALID_CMD_NAME) {
 		ft_printf("\
 ft_ssl: Error: '%s' is an invalid command.\n\n\
 Standard commands:\n\n\
 Message Digest commands:\n\
 md5\n\
 sha256\n\n\
-Cipher commands:\n", justification);
+Cipher commands:\n",
+			justification);
 	}
-	// option require an argument
-	else if (display_code == 3) {
-		ft_printf("md5: option requires an argument -- %c\n\
-usage: md5 [-pqrtx] [-s string] [files ...]\n", justification[0]);
-	}
+
+	// Option require an argument
+	// else if (error_code == ERR_OPT_WITHOUT_ARG) {
+	// 	ft_printf("md5: option requires an argument -- %c\n\
+	// 		usage: md5 [-pqrtx] [-s string] [files ...]\n",
+	// 		justification[0]);
+	// }
+
 	// invalid option
-	else if (display_code == 4) {
+	else if (error_code == ERR_INVALID_OPT) {
 		ft_printf("md5: illegal option -- %c\n\
-usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n", justification[0]);
+usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
+			justification[0]);
 	}
-	return (del_t_ssl(ssl));
+
+	ssl->return_value = -1;
+	return (-1);
 }
 
-static t_ssl		*parsing_flags(t_ssl *ssl, int argc, char **argv) {
-	int		i;
 
-	i = 2;
-	while (i < argc) {
-		if (argv[i][0] == '-' && ft_strlen(argv[i]) >= 2) {
-			if (!(ft_strcmp(argv[i], "-p"))) {
-				if (!(ssl->flags & 1))
-					ssl->flags += 1;
+/*
+**	parsing_files:
+**		***
+*/
+
+static int		parsing_files(t_ssl *ssl, int *argv_i, int flag) {
+	t_list		*new_node;
+	t_input		*new_input;
+
+	// Init t_input
+	if (!(new_input = init_t_input()))
+		return (-1);
+	if (!(new_node = ft_lstnew(NULL, 0)))
+		return (-1);
+	new_node->content = new_input;
+	ft_lstadd(&ssl->inputs, new_node);
+
+	// Touch variables
+	if (!flag)
+		new_input->input = ft_strdup(ssl->argv[*argv_i]);
+	else if (flag == FLAG_P)
+	{
+		new_input->input = NULL;
+		new_input->flags += FLAG_P;
+	}
+	new_input->flags += ssl->flags;
+
+	return (0);
+}
+
+
+/*
+**	parsing_flags:
+**		***
+*/
+
+static int		parsing_flags(t_ssl *ssl, int *argv_i) {
+	size_t		argv_j;
+	size_t		len;
+	int			flags_tmp;
+
+	// Filter flags parsing
+	if ((ssl->flags & 1) || ssl->argv[*argv_i][0] != '-')
+		return (0);
+
+	len = ft_strlen(ssl->argv[*argv_i]);
+
+	// Stops parameters parsing
+	if (len == 1)
+	{
+		ssl->flags += FLAG_END_OF_PARAMETERS;
+		return (0);
+	}
+	else if (ft_strequ(ssl->argv[*argv_i], "--"))
+	{
+		ssl->flags += FLAG_END_OF_PARAMETERS;
+		++*argv_i;
+		return (0);
+	}
+
+	// Iterates on potential flags
+	argv_j = 1;
+	flags_tmp = 0;
+	while (argv_j < len)
+	{
+		if (ssl->argv[*argv_i][argv_j] == 'p')
+		{
+			//	initialize and set a FLAG_P mask on the input node
+			if (!(flags_tmp & FLAG_P))
+			{
+				flags_tmp += FLAG_P;
+				parsing_files(ssl, 0, FLAG_P);
 			}
-			else if (!(ft_strcmp(argv[i], "-q"))) {
-				if (!(ssl->flags & 2))
-				ssl->flags += 2;
+
+		}
+		else if (ssl->argv[*argv_i][argv_j] == 'q')
+		{
+			if (!(ssl->flags & FLAG_Q))
+				ssl->flags += FLAG_Q;
+		}
+		else if (ssl->argv[*argv_i][argv_j] == 'r')
+		{
+			if (!(ssl->flags & FLAG_R))
+				ssl->flags += FLAG_R;
+		}
+		// else if (ssl->argv[*argv_i][argv_j] == 's')
+		// {
+		//		initialize and set a FLAG_S mask on the input node
+		//		parse the rest of this string or the next argv parameter
+		//			input
+		// }
+		else
+			return (parsing_error_display(ssl, ERR_INVALID_OPT,
+				&ssl->argv[*argv_i][argv_j]));
+		++argv_j;
+	}
+
+	++*argv_i;
+	return (0);
+}
+
+
+/*
+**	parsing_command_name:
+**		Checks if no argument was passed
+**		Duplicates the found char* command name
+**		Returns a negative value for a failed allocation or a parsing error
+*/
+
+static int		parsing_command_name (t_ssl *ssl) {
+	// No argument passed
+	if (ssl->argc == 1)
+		return (parsing_error_display(ssl, ERR_NO_ARG, NULL));
+
+	// Parsing command name
+	if (ssl->argc >= 2)
+	{
+		if (ft_strequ(ssl->argv[1], "md5") || ft_strequ(ssl->argv[1], "sha256"))
+		{
+			if (!(ssl->command_name = ft_strdup(ssl->argv[1])))
+			{
+				ssl->return_value = -1;
+				return (-1);
 			}
-			else if (!(ft_strcmp(argv[i], "-r"))) {
-				if (!(ssl->flags & 4))
-				ssl->flags += 4;
-			}
-			else if (!(ft_strcmp(argv[i], "-s"))) {
-				if (i + 1 != argc) {
-					if (!(ssl->files = ft_strmapadd_leakless(ssl->files,
-						argv[++i])))
-						return (del_t_ssl(ssl));
-				}
-				else
-					return (parsing_error_display(ssl, 3, &argv[i][1]));
-			}
-			else if (!(ft_strcmp(argv[i], "--")) && ++i)
-				break;
-			else
-				return (parsing_error_display(ssl, 4, &argv[i][1]););
 		}
 		else
-			break;
-		++i;
+			return (parsing_error_display(ssl, ERR_INVALID_CMD_NAME,
+				ssl->argv[1]));
 	}
 
-	// parsing files
-	if (!(ssl->files = ft_strmapjoin_leakless(ssl->files,
-		(const char**)(unsigned long)(&argv[i]))))
-		return (del_t_ssl(ssl));
-
-	return (ssl);
+	return (0);
 }
 
-t_ssl		*parsing (t_ssl *ssl, int argc, char **argv) {
-	// no argument passed
-	if (argc == 1)
-		return (parsing_error_display(ssl, 1, NULL));
-	// parsing command name
-	if (argc >= 2) {
-		if (!(ft_strcmp(argv[1], "md5")) || !(ft_strcmp(argv[1], "sha256")))
-			ssl->command_name = ft_strdup(argv[1]);
-		else
-			return (parsing_error_display(ssl, 2, argv[1]));
-	}
-	// parsing flags then files
-	ssl = parsing_flags(ssl, argc, argv);
 
-	return (ssl);
+/*
+**	parsing:
+**		Iterates on argv arguments to find valuable informations
+**		Searches for the command name char* first: "md5" or "sh256"
+**		Then flags and finaly files with their own specific parsing
+**		Returns a negative value for a failed allocation or an error
+*/
+
+int				parsing (t_ssl *ssl) {
+	int		argv_i;
+
+	// Parsing command name
+	if (parsing_command_name(ssl))
+		return (-1);
+
+	// Parsing
+	argv_i = 2;
+	while (argv_i < ssl->argc)
+	{
+		if (parsing_flags(ssl, &argv_i))
+			return (-1);
+		if (parsing_files(ssl, &argv_i, 0))
+			return (-1);
+		++argv_i;
+	}
+
+	return (0);
 }

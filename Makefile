@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/10/16 00:03:14 by mapandel         ###   ########.fr        #
+#    Updated: 2019/11/17 06:48:18 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME =		ft_ssl
 #			Compilation
 
 CC = 		clang
-CFLAGS = 	-Wall -Wextra -Werror -Weverything
+CFLAGS = 	#-Wall -Wextra -Werror -Weverything
 
 #			Sources
 
