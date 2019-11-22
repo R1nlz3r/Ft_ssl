@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/21 05:31:22 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/22 06:04:17 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,8 @@ typedef struct		s_ssl {
 
 t_input				*init_t_input();
 int					parsing (t_ssl *ssl);
+void				display_inputs(t_ssl *ssl);
+void				display_t_ssl(t_ssl *ssl);
+void				infinite_loop(t_ssl **ssl);
 
 # endif

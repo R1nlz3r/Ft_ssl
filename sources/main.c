@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:21 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/21 23:43:38 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/22 06:03:23 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,26 +128,14 @@ int				main (int argc, char **argv) {
 
 	// Display
 	// Debug purpose
-	// t_list		*lst = lst = ssl->inputs;
-	// t_input		*input = NULL;
-	// int			index = 0;
-	// lst = ft_lststart(lst);
-	// while (lst)
-	// {
-	// 	input = (t_input*)lst->content;
-	// 	ft_printf("Node: %d - Flags: %d - Input: %s\n", index, input->flags,
-	// 		input->input);
-	// 	lst = lst->next;
-	// 	++index;
-	// }
+	// display_t_ssl(ssl);
 
 	// Freeing
 	return_value = ssl->return_value;
 	del_t_ssl(ssl);
 
 	// Debug purpose
-	// ssl = NULL;
-	// while(1) {}
+	// infinite_loop(&ssl);
 
 	return (return_value);
 }
