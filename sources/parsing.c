@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/21 23:42:56 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/24 00:42:43 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,14 @@ static int		parsing_files(t_ssl *ssl, int *argv_i, int flag) {
 
 	// Touch variables
 	if (!flag)
-		new_input->input = ft_strdup(ssl->argv[*argv_i]);
+	{
+		if (!(new_input->input = ft_strdup(ssl->argv[*argv_i])))
+			return (-1);
+	}
 	else if (flag == FLAG_P)
 	{
-		new_input->input = NULL;
+		if (get_next_char(1, &new_input->input, EOF) == -1)
+			return (-1);
 		new_input->flags += FLAG_P;
 	}
 	new_input->flags += ssl->flags;
@@ -93,11 +97,6 @@ static int		parsing_files(t_ssl *ssl, int *argv_i, int flag) {
 static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 	size_t		argv_j;
 	size_t		len;
-	int			flags_tmp;
-
-	// Filter flags parsing
-	if ((ssl->flags & 1) || ssl->argv[*argv_i][0] != '-')
-		return (0);
 
 	len = ft_strlen(ssl->argv[*argv_i]);
 
@@ -105,29 +104,26 @@ static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 	if (len == 1)
 	{
 		ssl->flags += FLAG_END_OF_PARAMETERS;
+		if (parsing_files(ssl, argv_i, 0) == -1)
+			return (-1);
 		return (0);
 	}
 	else if (ft_strequ(ssl->argv[*argv_i], "--"))
 	{
 		ssl->flags += FLAG_END_OF_PARAMETERS;
-		++*argv_i;
 		return (0);
 	}
 
 	// Iterates on potential flags
 	argv_j = 1;
-	flags_tmp = 0;
 	while (argv_j < len)
 	{
 		if (ssl->argv[*argv_i][argv_j] == 'p')
 		{
-			//	initialize and set a FLAG_P mask on the input node
-			if (!(flags_tmp & FLAG_P))
-			{
-				flags_tmp += FLAG_P;
-				parsing_files(ssl, 0, FLAG_P);
-			}
-
+			if (parsing_files(ssl, 0, FLAG_P) == -1)
+				return (-1);
+			// compute digest
+			// display digest
 		}
 		else if (ssl->argv[*argv_i][argv_j] == 'q')
 		{
@@ -151,7 +147,6 @@ static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 		++argv_j;
 	}
 
-	++*argv_i;
 	return (0);
 }
 
@@ -203,12 +198,19 @@ int				parsing (t_ssl *ssl) {
 	if (parsing_command_name(ssl))
 		return (-1);
 
-	// Parsing
+	// Parsing flags
 	argv_i = 2;
-	while (argv_i < ssl->argc)
+	while (argv_i < ssl->argc && !(ssl->flags & 1)
+		&& ssl->argv[argv_i][0] == '-')
 	{
 		if (parsing_flags(ssl, &argv_i))
 			return (-1);
+		++argv_i;
+	}
+
+	// Parsing files
+	while (argv_i < ssl->argc)
+	{
 		if (parsing_files(ssl, &argv_i, 0))
 			return (-1);
 		++argv_i;
