@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/24 00:42:43 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/24 05:39:02 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ static int		parsing_error_display(t_ssl *ssl, int error_code,
 
 	// Invalid command name
 	else if (error_code == ERR_INVALID_CMD_NAME) {
-		ft_printf("\
-ft_ssl: Error: '%s' is an invalid command.\n\n\
+		ft_printf("ft_ssl: Error: '%s' is an invalid command.\n\n\
 Standard commands:\n\n\
 Message Digest commands:\n\
 md5\n\
@@ -36,17 +35,17 @@ Cipher commands:\n",
 	}
 
 	// Option require an argument
-	// else if (error_code == ERR_OPT_WITHOUT_ARG) {
-	// 	ft_printf("md5: option requires an argument -- %c\n\
-	// 		usage: md5 [-pqrtx] [-s string] [files ...]\n",
-	// 		justification[0]);
-	// }
+	else if (error_code == ERR_OPT_WITHOUT_ARG) {
+		ft_printf("ft_ssl: %s: option requires an argument -- %c\n\
+usage: md5 [-pqr] [-s string] [files ...]\n",
+			ssl->command_name, justification[0]);
+	}
 
 	// invalid option
 	else if (error_code == ERR_INVALID_OPT) {
-		ft_printf("md5: illegal option -- %c\n\
+		ft_printf("ft_ssl: %s: illegal option -- %c\n\
 usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
-			justification[0]);
+			ssl->command_name, justification[0]);
 	}
 
 	ssl->return_value = -1;
@@ -59,9 +58,11 @@ usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
 **		***
 */
 
-static int		parsing_files(t_ssl *ssl, int *argv_i, int flag) {
+static int		parsing_files(t_ssl *ssl, int *argv_i, int flag,
+	char *s_flag_string) {
 	t_list		*new_node;
 	t_input		*new_input;
+	char		*p_flag_string;
 
 	// Init t_input
 	if (!(new_input = init_t_input()))
@@ -79,9 +80,26 @@ static int		parsing_files(t_ssl *ssl, int *argv_i, int flag) {
 	}
 	else if (flag == FLAG_P)
 	{
-		if (get_next_char(1, &new_input->input, EOF) == -1)
+		p_flag_string = NULL;
+		while (get_next_char(0, &new_input->input, EOF) > 0)
+		{
+			if (!(p_flag_string = ft_strjoin_leakless(p_flag_string,
+				new_input->input)))
+				return (-1);
+			ft_strdel(&new_input->input);
+		}
+		if (!(p_flag_string = ft_strjoin_leakless(p_flag_string,
+			new_input->input)))
 			return (-1);
+		ft_strdel(&new_input->input);
+		new_input->input = p_flag_string;
 		new_input->flags += FLAG_P;
+	}
+	else if (flag == FLAG_S)
+	{
+		if (!(new_input->input = ft_strdup(s_flag_string)))
+			return (-1);
+		new_input->flags += FLAG_S;
 	}
 	new_input->flags += ssl->flags;
 
@@ -104,7 +122,7 @@ static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 	if (len == 1)
 	{
 		ssl->flags += FLAG_END_OF_PARAMETERS;
-		if (parsing_files(ssl, argv_i, 0) == -1)
+		if (parsing_files(ssl, argv_i, 0, NULL) == -1)
 			return (-1);
 		return (0);
 	}
@@ -120,7 +138,7 @@ static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 	{
 		if (ssl->argv[*argv_i][argv_j] == 'p')
 		{
-			if (parsing_files(ssl, 0, FLAG_P) == -1)
+			if (parsing_files(ssl, 0, FLAG_P, NULL) == -1)
 				return (-1);
 			// compute digest
 			// display digest
@@ -135,12 +153,27 @@ static int		parsing_flags(t_ssl *ssl, int *argv_i) {
 			if (!(ssl->flags & FLAG_R))
 				ssl->flags += FLAG_R;
 		}
-		// else if (ssl->argv[*argv_i][argv_j] == 's')
-		// {
-		//		initialize and set a FLAG_S mask on the input node
-		//		parse the rest of this string or the next argv parameter
-		//			input
-		// }
+		else if (ssl->argv[*argv_i][argv_j] == 's')
+		{
+			if (argv_j + 1 < len)
+			{
+				if (parsing_files(ssl, NULL, FLAG_S,
+					&ssl->argv[*argv_i][++argv_j]) == -1)
+					return (-1);
+			}
+			else if (*argv_i + 1 < ssl->argc)
+			{
+				if (parsing_files(ssl, NULL, FLAG_S,
+					ssl->argv[++*argv_i]) == -1)
+					return (-1);
+			}
+			else
+				return (parsing_error_display(ssl, ERR_OPT_WITHOUT_ARG,
+				&ssl->argv[*argv_i][argv_j]));
+			// compute digest
+			// display digest
+			return (0);
+		}
 		else
 			return (parsing_error_display(ssl, ERR_INVALID_OPT,
 				&ssl->argv[*argv_i][argv_j]));
@@ -211,10 +244,14 @@ int				parsing (t_ssl *ssl) {
 	// Parsing files
 	while (argv_i < ssl->argc)
 	{
-		if (parsing_files(ssl, &argv_i, 0))
+		if (parsing_files(ssl, &argv_i, 0, NULL))
 			return (-1);
 		++argv_i;
 	}
+
+	// No parameters
+	if (ssl->argc == 2 && parsing_files(ssl, NULL, FLAG_P, NULL) == -1)
+		return (-1);
 
 	return (0);
 }
