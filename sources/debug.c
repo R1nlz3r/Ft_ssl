@@ -6,11 +6,17 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:22:20 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/22 06:02:01 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/26 00:04:05 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+/*
+**	infinite_loop:
+**		Endless loop with no return value
+**			to perform the `leaks` command in parallel
+*/
 
 void	infinite_loop(t_ssl **ssl)
 {
@@ -19,6 +25,12 @@ void	infinite_loop(t_ssl **ssl)
 	*ssl = NULL;
 	while (1) {}
 }
+
+
+/*
+**	display_inputs:
+**		Displays the values of all t_inputs on the t_list chain list
+*/
 
 void	display_inputs(t_ssl *ssl)
 {
@@ -38,6 +50,12 @@ void	display_inputs(t_ssl *ssl)
 		++index;
 	}
 }
+
+
+/*
+**	display_t_ssl:
+**		Displays all the values for the data container of this project
+*/
 
 void	display_t_ssl(t_ssl *ssl)
 {

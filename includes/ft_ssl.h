@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/22 06:04:17 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/11/26 00:16:59 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 # define FT_SSL_H
 
 #include "libft.h"
-#include "ft_printf.h"
 
-// Par la suite, inplémenter ici la data en dur des algorithmes md5 et sha256
-
-// Parsing error codes given to display
+// Error codes
 # define ERR_NO_ARG					1
 # define ERR_INVALID_CMD_NAME		2
 # define ERR_OPT_WITHOUT_ARG		3
@@ -30,6 +27,7 @@
 # define FLAG_Q						4
 # define FLAG_R						8
 # define FLAG_S						16
+
 
 /*
 **	t_input:
@@ -50,7 +48,9 @@ typedef struct		s_input {
 	char	*input;
 	char	*digest;
 	int		flags;
+	int		pad_0;
 }					t_input;
+
 
 /*
 **	t_ssl: data container for this project
@@ -74,14 +74,35 @@ typedef struct		s_ssl {
 	t_list	*inputs;
 	int		flags;
 	int		return_value;
-	int		argc;
+	size_t	argc;
 	char	**argv;
 }					t_ssl;
 
-t_input				*init_t_input();
-int					parsing (t_ssl *ssl);
+// debug.c
 void				display_inputs(t_ssl *ssl);
 void				display_t_ssl(t_ssl *ssl);
 void				infinite_loop(t_ssl **ssl);
+
+// display.c
+int					display_parsing_error(t_ssl *ssl, int error_code,
+	char *justification);
+
+// parsing_file.c
+int					parsing_file(t_ssl *ssl, char *input_string, int flag);
+
+// parsing_flags.c
+int					parsing_flags(t_ssl *ssl, size_t *argv_i);
+
+// parsing.c
+int					parsing (t_ssl *ssl);
+
+// touch_t_input.c
+t_input				*add_t_input_to_t_list(t_ssl *ssl);
+t_input				*init_t_input(void);
+void				del_t_input(t_input *node, size_t unused_value);
+
+// touch_t_ssl.c
+t_ssl				*init_t_ssl(t_ssl *ssl, int argc, char **argv);
+void				del_t_ssl(t_ssl *ssl);
 
 # endif

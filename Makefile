@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/11/22 02:33:08 by mapandel         ###   ########.fr        #
+#    Updated: 2019/11/25 04:19:06 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,13 +15,18 @@ NAME =		ft_ssl
 #			Compilation
 
 CC = 		clang
-CFLAGS = 	#-Wall -Wextra -Werror -Weverything
+CFLAGS = 	-Wall -Wextra -Werror -Weverything
 
 #			Sources
 
-SRC =		sources/main.c \
+SRC =		sources/debug.c \
+			sources/display.c \
+			sources/main.c \
+			sources/parsing_file.c \
+			sources/parsing_flags.c \
 			sources/parsing.c \
-			sources/debug.c \
+			sources/touch_t_input.c \
+			sources/touch_t_ssl.c \
 
 OBJ =		$(SRC:.c=.o)
 
