@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:45:46 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/26 00:18:19 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/01 22:06:17 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,15 @@
 
 void		del_t_ssl(t_ssl *ssl)
 {
+	t_list		*lst_start;
+
 	if (ssl) {
 		if (ssl->command_name)
 			ft_strdel(&ssl->command_name);
 		if (ssl->argv)
 			ft_strmapdel(&ssl->argv);
-		ft_lstdel(&ssl->inputs, (void (*)(void *, size_t))&del_t_input);
+		lst_start = ft_lststart(ssl->inputs);
+		ft_lstdel(&lst_start, (void (*)(void *, size_t))&del_t_input);
 		ft_memdel((void**)&ssl);
 	}
 }

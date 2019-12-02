@@ -6,13 +6,14 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/26 00:16:59 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/02 02:21:53 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 
+#include <fcntl.h>
 #include "libft.h"
 
 // Error codes
@@ -86,6 +87,9 @@ void				infinite_loop(t_ssl **ssl);
 // display.c
 int					display_parsing_error(t_ssl *ssl, int error_code,
 	char *justification);
+
+// execution.c
+int					execution(t_ssl *ssl);
 
 // parsing_file.c
 int					parsing_file(t_ssl *ssl, char *input_string, int flag);

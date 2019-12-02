@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/11/25 04:19:06 by mapandel         ###   ########.fr        #
+#    Updated: 2019/12/01 02:30:41 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ CFLAGS = 	-Wall -Wextra -Werror -Weverything
 
 SRC =		sources/debug.c \
 			sources/display.c \
+			sources/execution.c \
 			sources/main.c \
 			sources/parsing_file.c \
 			sources/parsing_flags.c \

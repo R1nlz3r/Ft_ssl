@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/25 23:53:23 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/01 03:06:10 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,5 @@ usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
 			ssl->command_name, justification[0]);
 	}
 
-	ssl->return_value = 1;
 	return (-1);
 }
