@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/12/01 02:30:41 by mapandel         ###   ########.fr        #
+#    Updated: 2019/12/05 03:13:11 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC =		sources/debug.c \
 			sources/display.c \
 			sources/execution.c \
 			sources/main.c \
+			sources/md5.c \
 			sources/parsing_file.c \
 			sources/parsing_flags.c \
 			sources/parsing.c \
@@ -75,7 +76,7 @@ $(LIBPATH):
 	@cd libft; $(MAKE) -f Makefile
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I $(INC) -I $(LIBINC) -c -o $@ $^
+	$(CC) $(CFLAGS) -I $(INC) -c -o $@ $^
 
 ecompile:
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBPATH)

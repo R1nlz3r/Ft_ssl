@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:50:51 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/26 00:02:24 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/04 02:51:30 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ void		del_t_input(t_input *node, size_t unused_value)
 	if (node) {
 		if (node->input)
 			ft_strdel(&node->input);
+		if (node->msg)
+			ft_strdel((char**)&node->msg);
 		if (node->digest)
-			ft_strdel(&node->digest);
+			ft_strdel((char**)&node->digest);
 		ft_memdel((void**)&node);
 	}
 }
@@ -68,7 +70,9 @@ t_input		*init_t_input(void)
 	if (!(node = ft_memalloc(sizeof(t_input))))
 		return (NULL);
 	node->input = NULL;
+	node->msg = NULL;
 	node->digest = NULL;
+	node->msg_len = 0;
 	node->flags = 0;
 	return (node);
 }

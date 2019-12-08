@@ -6,15 +6,16 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/02 02:21:53 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/06 02:03:29 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_SSL_H
 # define FT_SSL_H
 
-#include <fcntl.h>
-#include "libft.h"
+# include <fcntl.h>
+# include <math.h>
+# include "../Libft/includes/libft.h"
 
 // Error codes
 # define ERR_NO_ARG					1
@@ -28,6 +29,37 @@
 # define FLAG_Q						4
 # define FLAG_R						8
 # define FLAG_S						16
+
+
+// MD5 hard written rotations numbers
+static unsigned int	md5_rotations[64] = {
+	7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
+	5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
+	4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
+	6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21
+};
+
+
+/*
+**	t_md5: values container for the MD5 algorithm
+**		Stores all the values for computations
+*/
+
+typedef struct		s_md5 {
+	unsigned int	r[64];
+	unsigned int	k[64];
+	unsigned int	*w;
+	unsigned int	h0;
+	unsigned int	h1;
+	unsigned int	h2;
+	unsigned int	h3;
+	unsigned int	a;
+	unsigned int	b;
+	unsigned int	c;
+	unsigned int	d;
+	unsigned int	f;
+	unsigned int	g;
+}					t_md5;
 
 
 /*
@@ -46,10 +78,12 @@
 */
 
 typedef struct		s_input {
-	char	*input;
-	char	*digest;
-	int		flags;
-	int		pad_0;
+	char			*input;
+	unsigned char	*msg;
+	char			*digest;
+	size_t			msg_len;
+	int				flags;
+	int				pad_0;
 }					t_input;
 
 
@@ -90,6 +124,9 @@ int					display_parsing_error(t_ssl *ssl, int error_code,
 
 // execution.c
 int					execution(t_ssl *ssl);
+
+// md5.c
+int					md5(t_input *input);
 
 // parsing_file.c
 int					parsing_file(t_ssl *ssl, char *input_string, int flag);

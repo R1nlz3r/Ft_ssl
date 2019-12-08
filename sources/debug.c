@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:22:20 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/26 00:04:05 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/03 05:03:38 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ void	display_inputs(t_ssl *ssl)
 		input = (t_input*)lst->content;
 		ft_printf("Node: %3d \033[34m|\033[0m\
  Flags: %3d \033[34m|\033[0m\
+ Message Length: %5d \033[34m|\033[0m\
  Input: %20s \033[34m|\033[0m\
  Digest: %20s\n",
- 			index, input->flags, input->input, input->digest);
+ 			index, input->flags, input->msg_len, input->input, input->digest);
 		lst = lst->next;
 		++index;
 	}

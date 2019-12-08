@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/02 02:21:36 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/08 03:48:17 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,30 @@
 static int		execution_message_preparation(t_input *input)
 {
 	char		*new_msg;
-	size_t		len;
 	size_t		pad_len;
 	size_t		bit_len;
 
-	len = ft_strlen(input->input);
-
 	// Number of characters to pad
-	pad_len = 64 - ((len + 9) % 64);
+	pad_len = 64 - ((input->msg_len + 9) % 64);
 	if (pad_len == 64)
 		pad_len = 0;
 
 	// Copy of the message
-	if (!(new_msg = ft_strnew(len + 9 + pad_len)))
+	if (!(new_msg = ft_strnew(input->msg_len + 9 + pad_len)))
 		return (-1);
-	ft_strcpy(new_msg, input->input);
+	ft_memcpy(new_msg, input->msg, input->msg_len);
 
 	// Adding the bias character
-	new_msg[len] = -128;
+	new_msg[input->msg_len] = -128;
 
 	// Adding the message length in bits
-	bit_len = len * 8;
-	ft_memcpy(new_msg + len + 1 + pad_len, &bit_len, 8);
+	bit_len = input->msg_len * 8;
+	ft_memcpy(new_msg + input->msg_len + 1 + pad_len, &bit_len, 8);
 
-	// Replace input by the prepared message
-	ft_strdel(&input->input);
-	input->input = new_msg;
+	// Set the prepared message
+	ft_strdel((char**)&input->msg);
+	input->msg = (unsigned char*)new_msg;
+	input->msg_len += 9 + pad_len;
 
 	return (0);
 }
@@ -71,7 +69,12 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 
 	// Filter flags who do not require a file opening
 	if (input->flags & FLAG_P || input->flags & FLAG_S)
+	{
+		if (!(input->msg = (unsigned char*)ft_strdup(input->input)))
+			return (-1);
+		input->msg_len = ft_strlen((char*)input->msg);
 		return (0);
+	}
 
 	// Opening
 	if ((fd = open(input->input, O_RDONLY | O_SYMLINK)) < 0)
@@ -81,10 +84,8 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 	}
 
 	// Replace the input by the content of the file
-	ft_strdel(&input->input);
-	if (!(input->input = get_file(fd)))
+	if (!(input->msg = (unsigned char*)get_file(fd, (ssize_t*)&input->msg_len)))
 		return (-1);
-
 	return (0);
 }
 
@@ -94,7 +95,8 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 **		Transforms the current input to the final digest
 **		Starts by opening the specified file
 **		Prepare the message to a 512 bits mod input
-**		...
+**		Computes and produces the choosen algorithm digest
+**		..
 **		Returns zero for a successfull conversion,
 **			a positive value for a failed one
 **			and a negative value for a failed allocation
@@ -115,11 +117,12 @@ int				execution(t_ssl *ssl)
 	if ((ret_val = execution_message_preparation(input)))
 		return (ret_val);
 
-	// Implement rotations
-
-	// Concatenate the digest
+	// Implement rotations and produce the digest
+	if (ft_strequ(ssl->command_name, "md5") && (ret_val = md5(input)))
+		return (ret_val);
 
 	// Display
+	ft_putendl(input->digest);
 
 	return (0);
 }
