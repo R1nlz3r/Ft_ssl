@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/08 03:48:17 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 01:55:29 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,20 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 	if ((fd = open(input->input, O_RDONLY | O_SYMLINK)) < 0)
 	{
 		ssl->return_value = 1;
+		ft_puterror(ssl->argv[0], input->input);
 		return (1);
 	}
 
 	// Replace the input by the content of the file
-	if (!(input->msg = (unsigned char*)get_file(fd, (ssize_t*)&input->msg_len)))
-		return (-1);
+	input->msg = (unsigned char*)get_file(fd, (ssize_t*)&input->msg_len);
+	if (!input->msg || (ssize_t)input->msg_len == -1)
+	{
+		ssl->return_value = 1;
+		ft_puterror(ssl->argv[0], input->input);
+		if (!input->msg)
+			return (-1);
+		return (1);
+	}
 	return (0);
 }
 
