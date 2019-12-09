@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 06:54:16 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 23:49:59 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define FLAG_S						16
 
 
-// MD5 hard written rotations numbers
+// MD5 hard written numbers of bitwise rotations
 static unsigned int	md5_rotations[64] = {
 	7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
 	5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
@@ -42,7 +42,7 @@ static unsigned int	md5_rotations[64] = {
 
 /*
 **	t_md5: values container for the MD5 algorithm
-**		Stores all the values for computations
+**		Stores all the values for used for the rotations and permutations
 */
 
 typedef struct		s_md5 {
@@ -64,9 +64,9 @@ typedef struct		s_md5 {
 
 /*
 **	t_input:
-**		Used in a chain list to store every parsed file
-**		Associates all potential int flags to a file
-**		Stores the digest of the algorithm too as a char*
+**		Stores the variables associated to an parsed argument
+**		The message used for computations and its digest output
+**		Associates all potential flags the input
 **
 **	Flags considered:
 **		-p: Input is STDIN											- mask 2
@@ -89,10 +89,10 @@ typedef struct		s_input {
 
 /*
 **	t_ssl: data container for this project
-**		Stores the name of algorithm as a char*
-**		And a chained list of parsed inputs under the t_input structure
-**		Triggers flags for future inputs
-**		Defines the return value
+**		Stores the name of the choosen algorithm
+**		A t_input* structure to access an agument and its associated variables
+**		Flags used for future inputs
+**		Defines the main return value in case of a failed conversion
 **		Duplicates argv and stores argc value for easy access
 **
 **	Flags considered:
@@ -105,16 +105,16 @@ typedef struct		s_input {
 */
 
 typedef struct		s_ssl {
-	char	*command_name;
-	t_list	*inputs;
-	int		flags;
-	int		return_value;
-	size_t	argc;
-	char	**argv;
+	char		*command_name;
+	t_input		*input;
+	int			flags;
+	int			return_value;
+	size_t		argc;
+	char		**argv;
 }					t_ssl;
 
 // debug.c
-void				display_inputs(t_ssl *ssl);
+void				display_t_input(t_input *input);
 void				display_t_ssl(t_ssl *ssl);
 void				infinite_loop(t_ssl **ssl);
 
@@ -139,12 +139,11 @@ int					parsing_flags(t_ssl *ssl, size_t *argv_i);
 int					parsing (t_ssl *ssl);
 
 // touch_t_input.c
-t_input				*add_t_input_to_t_list(t_ssl *ssl);
 t_input				*init_t_input(void);
-void				del_t_input(t_input *node, size_t unused_value);
+void				del_t_input(t_input **input);
 
 // touch_t_ssl.c
 t_ssl				*init_t_ssl(t_ssl *ssl, int argc, char **argv);
-void				del_t_ssl(t_ssl *ssl);
+void				del_t_ssl(t_ssl **ssl);
 
 # endif

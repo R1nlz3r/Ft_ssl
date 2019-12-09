@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/01 02:04:34 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/10 00:01:09 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static int		parsing_command_name (t_ssl *ssl)
 **		Iterates on arguments to find valuable informations
 **		Searches for the command name of the choosen algorithm
 **		Then flags and files with their own specific parsing
+**		Further executions follows a file parsing and at the end
+**			all the digests are computed for any argument given
 **		No arguments given after the command name makes the program parse stdin
 **		Returns a negative value for a failed allocation or an error
 */

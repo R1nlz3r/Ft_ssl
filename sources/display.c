@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 07:21:31 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 23:42:34 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ Cipher commands:\n", ssl->argv[0], justification);
 	else if (error_code == ERR_OPT_WITHOUT_ARG)
 	{
 		ft_printf("%s: %s: option requires an argument -- %c\n\
-usage: md5 [-pqr] [-s string] [files ...]\n",
+usage: ft_ssl command [-pqr] [-s string] [files ...]\n",
 			ssl->argv[0], ssl->command_name, justification[0]);
 	}
 	else if (error_code == ERR_INVALID_OPT)
 	{
 		ft_printf("%s: %s: illegal option -- %c\n\
-usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
+usage: ft_ssl command [-pqr] [-s string] [files ...]\n",
 			ssl->argv[0], ssl->command_name, justification[0]);
 	}
 

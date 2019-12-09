@@ -6,34 +6,11 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:50:51 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/04 02:51:30 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 11:35:40 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-
-/*
-**	add_t_input_to_t_list:
-**		Allocates a new t_list node and a t_input
-**		Stocks the input in this new node
-**		And plugs the node at the end of the chain list of inputs
-**		Returns a pointer on the new input
-**		Returns this new input or NULL if an allocation failed
-*/
-
-t_input		*add_t_input_to_t_list(t_ssl *ssl)
-{
-	t_list		*new_node;
-	t_input		*new_input;
-
-	if (!(new_input = init_t_input())
-		|| !(new_node = ft_lstnew(NULL, 0)))
-		return (NULL);
-	new_node->content = new_input;
-	ft_lstadd(&ssl->inputs, new_node);
-	return (new_input);
-}
-
 
 /*
 **	del_t_input:
@@ -42,17 +19,17 @@ t_input		*add_t_input_to_t_list(t_ssl *ssl)
 **		The function do not return a value
 */
 
-void		del_t_input(t_input *node, size_t unused_value)
+void		del_t_input(t_input **input)
 {
-	(void)unused_value;
-	if (node) {
-		if (node->input)
-			ft_strdel(&node->input);
-		if (node->msg)
-			ft_strdel((char**)&node->msg);
-		if (node->digest)
-			ft_strdel((char**)&node->digest);
-		ft_memdel((void**)&node);
+	if (input && *input) {
+		if ((*input)->input)
+			ft_strdel(&(*input)->input);
+		if ((*input)->msg)
+			ft_strdel((char**)&(*input)->msg);
+		if ((*input)->digest)
+			ft_strdel(&(*input)->digest);
+		ft_memdel((void**)input);
+		*input = NULL;
 	}
 }
 

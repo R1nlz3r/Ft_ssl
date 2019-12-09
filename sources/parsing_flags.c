@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:58:01 by mapandel          #+#    #+#             */
-/*   Updated: 2019/11/25 23:43:54 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 23:39:40 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 /*
 **	parsing_flag_s:
-**		Sets up a new input for a 's' flag trigger
-**		Compute the digest for the found input
+**		Sets up a new input argument from a 's' flag trigger
+**		Computes the digest for the found argument
 **		Displays it
 **		A missing input is considered a parsing error,
 **			it then displays the appropriate error message
@@ -39,17 +39,14 @@ static int		parsing_flag_s(t_ssl *ssl, size_t *argv_i, size_t *argv_j,
 		return (display_parsing_error(ssl, ERR_OPT_WITHOUT_ARG,
 		&ssl->argv[*argv_i][*argv_j]));
 
-	// compute digest
-	// display digest
-
 	return (0);
 }
 
 
 /*
 **	parsing_flag_p:
-**		Sets up a new input for a 'p' flag trigger
-**		Compute the digest for the found input
+**		Sets up a new input argument from a 'p' flag trigger
+**		Computes the digest for the found argument
 **		Displays it
 **		Returns a negative value for a failed allocation
 */
@@ -59,17 +56,14 @@ static int		parsing_flag_p(t_ssl *ssl)
 	if (parsing_file(ssl, NULL, FLAG_P) == -1)
 		return (-1);
 
-	// compute digest
-	// display digest
-
 	return (0);
 }
 
 
 /*
 **	parsing_flags_search:
-**		Iterates on potential flags for an argument
-**		Handles 'qr' flags and delegates 'ps'
+**		Iterates for potential flags on an argument
+**		Handles 'qr' and delegates 'ps' flags
 **		An invalid option is considered a parsing error,
 **			it then displays the appropriate error message
 **		Returns a negative value for a failed allocation or a parsing error
@@ -112,8 +106,8 @@ static int		parsing_flags_search(t_ssl *ssl, size_t *argv_i, size_t len)
 /*
 **	parsing_flags:
 **		Filters a flag search for an argument
-**		Handles "-" and "--" arguments
-**		Sets up the appropriate flags and inputs to initialize right away
+**		Handles "-" and "--" flags and delegates the rest
+**		Sets up the appropriate arguments and flags to initialize right away
 **		Returns a negative value for a failed allocation or a parsing error
 */
 

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 06:54:55 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 19:41:54 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,37 +100,34 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 
 /*
 **	execution:
-**		Transforms the current input to the final digest
+**		Transforms the current input agument to the final hash
 **		Starts by opening the specified file
 **		Prepare the message to a 512 bits mod input
 **		Computes and produces the choosen algorithm digest
-**		..
+**		Displays it according to the right combination of flags
 **		Returns zero for a successfull conversion,
-**			a positive value for a failed one
+**			a positive value for a failed one (non blocking)
 **			and a negative value for a failed allocation
 */
 
 int				execution(t_ssl *ssl)
 {
-	t_input		*input;
 	int			ret_val;
 
-	input = ssl->inputs->content;
-
 	// Open the file to store the initial message
-	if ((ret_val = execution_open_file(ssl, input)))
+	if ((ret_val = execution_open_file(ssl, ssl->input)))
 		return (ret_val);
 
 	// Prepare the message
-	if ((ret_val = execution_message_preparation(input)))
+	if ((ret_val = execution_message_preparation(ssl->input)))
 		return (ret_val);
 
 	// Implement rotations and produce the digest
-	if (ft_strequ(ssl->command_name, "md5") && (ret_val = md5(input)))
+	if (ft_strequ(ssl->command_name, "md5") && (ret_val = md5(ssl->input)))
 		return (ret_val);
 
 	// Display
-	display_hash(input);
+	display_hash(ssl->input);
 
 	return (0);
 }

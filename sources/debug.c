@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:22:20 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/03 05:03:38 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 23:50:13 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,17 @@ void	infinite_loop(t_ssl **ssl)
 
 
 /*
-**	display_inputs:
-**		Displays the values of all t_inputs on the t_list chain list
+**	display_t_input:
+**		Displays all the values of a t_input
 */
 
-void	display_inputs(t_ssl *ssl)
+void	display_t_input(t_input *input)
 {
-	t_list		*lst = ssl->inputs;
-	t_input		*input = NULL;
-	int			index = 0;
-	lst = ft_lststart(lst);
-	while (lst)
-	{
-		input = (t_input*)lst->content;
-		ft_printf("Node: %3d \033[34m|\033[0m\
- Flags: %3d \033[34m|\033[0m\
+	ft_printf("Flags: %3d \033[34m|\033[0m\
  Message Length: %5d \033[34m|\033[0m\
  Input: %20s \033[34m|\033[0m\
  Digest: %20s\n",
- 			index, input->flags, input->msg_len, input->input, input->digest);
-		lst = lst->next;
-		++index;
-	}
+		input->flags, input->msg_len, input->input, input->digest);
 }
 
 
@@ -66,6 +55,6 @@ void	display_t_ssl(t_ssl *ssl)
 Return value: %8d \033[34m|\033[0m\
  Argc: %3d",
 		ssl->command_name, ssl->flags, ssl->return_value, ssl->argc);
-	ft_putendl("\n\nInputs:");
-	display_inputs(ssl);
+	// ft_putendl("\n\nInputs:");
+	// display_input(ssl->input);
 }
