@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 01:57:17 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 07:21:31 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,35 @@ usage: ft_ssl [command] [-pqr] [-s string] [files ...]\n",
 	}
 
 	return (-1);
+}
+
+
+/*
+**	display_hash:
+**		Outputs a computed digest of an input
+**			according to the right combination of options
+**		This function do no return a value
+*/
+
+void	display_hash(t_input *input)
+{
+	if (input->flags & FLAG_P)
+		ft_printf("%s", input->input);
+	if (!(input->flags & FLAG_P) && !(input->flags & FLAG_Q)
+		&& !(input->flags & FLAG_R))
+	{
+		if (input->flags & FLAG_S)
+			ft_printf("MD5 (\"%s\") = ", input->input);
+		else
+			ft_printf("MD5 (%s) = ", input->input);
+	}
+	ft_putstr(input->digest);
+	if (input->flags & FLAG_R && !(input->flags & FLAG_Q))
+	{
+		if (input->flags & FLAG_S)
+			ft_printf(" \"%s\"", input->input);
+		else
+			ft_printf(" %s", input->input);
+	}
+	ft_putchar('\n');
 }

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/06 02:03:29 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 06:54:16 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void				infinite_loop(t_ssl **ssl);
 // display.c
 int					display_parsing_error(t_ssl *ssl, int error_code,
 	char *justification);
+void				display_hash(t_input *input);
 
 // execution.c
 int					execution(t_ssl *ssl);

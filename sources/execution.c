@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 04:28:38 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/09 06:54:55 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int				execution(t_ssl *ssl)
 		return (ret_val);
 
 	// Display
-	ft_putendl(input->digest);
+	display_hash(input);
 
 	return (0);
 }
