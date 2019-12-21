@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/12/05 03:13:11 by mapandel         ###   ########.fr        #
+#    Updated: 2019/12/11 18:41:31 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC =		sources/debug.c \
 			sources/parsing_file.c \
 			sources/parsing_flags.c \
 			sources/parsing.c \
+			sources/sha256.c \
 			sources/touch_t_input.c \
 			sources/touch_t_ssl.c \
 

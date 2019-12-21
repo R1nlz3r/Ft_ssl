@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 23:49:59 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/13 01:38:58 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,34 @@
 # define FLAG_Q						4
 # define FLAG_R						8
 # define FLAG_S						16
+
+
+typedef struct		s_sha256 {
+	unsigned int	k[64];
+	unsigned int	w[64];
+	unsigned int	s0;
+	unsigned int	s1;
+	unsigned int	ch;
+	unsigned int	maj;
+	unsigned int	tmp1;
+	unsigned int	tmp2;
+	unsigned int	h0;
+	unsigned int	h1;
+	unsigned int	h2;
+	unsigned int	h3;
+	unsigned int	h4;
+	unsigned int	h5;
+	unsigned int	h6;
+	unsigned int	h7;
+	unsigned int	a;
+	unsigned int	b;
+	unsigned int	c;
+	unsigned int	d;
+	unsigned int	e;
+	unsigned int	f;
+	unsigned int	g;
+	unsigned int	h;
+}					t_sha256;
 
 
 // MD5 hard written numbers of bitwise rotations
@@ -121,7 +149,7 @@ void				infinite_loop(t_ssl **ssl);
 // display.c
 int					display_parsing_error(t_ssl *ssl, int error_code,
 	char *justification);
-void				display_hash(t_input *input);
+void				display_hash(char *command_name, t_input *input);
 
 // execution.c
 int					execution(t_ssl *ssl);
@@ -137,6 +165,9 @@ int					parsing_flags(t_ssl *ssl, size_t *argv_i);
 
 // parsing.c
 int					parsing (t_ssl *ssl);
+
+// sha256.c
+int					sha256(t_input *input);
 
 // touch_t_input.c
 t_input				*init_t_input(void);

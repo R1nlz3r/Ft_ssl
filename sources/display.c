@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 23:42:34 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/12 05:38:56 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,21 @@ usage: ft_ssl command [-pqr] [-s string] [files ...]\n",
 **		This function do no return a value
 */
 
-void	display_hash(t_input *input)
+void	display_hash(char *command_name, t_input *input)
 {
+	char	*cmd_uppercase;
+
+	cmd_uppercase = ft_strtoupper(command_name);
+
 	if (input->flags & FLAG_P)
 		ft_printf("%s", input->input);
 	if (!(input->flags & FLAG_P) && !(input->flags & FLAG_Q)
 		&& !(input->flags & FLAG_R))
 	{
 		if (input->flags & FLAG_S)
-			ft_printf("MD5 (\"%s\") = ", input->input);
+			ft_printf("%s (\"%s\") = ", cmd_uppercase, input->input);
 		else
-			ft_printf("MD5 (%s) = ", input->input);
+			ft_printf("%s (%s) = ", cmd_uppercase, input->input);
 	}
 	ft_putstr(input->digest);
 	if (input->flags & FLAG_R && !(input->flags & FLAG_Q))
@@ -78,4 +82,6 @@ void	display_hash(t_input *input)
 			ft_printf(" %s", input->input);
 	}
 	ft_putchar('\n');
+
+	ft_strdel(&cmd_uppercase);
 }

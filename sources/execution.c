@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 19:41:54 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/21 04:13:10 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@
 **		Returns a negative value for a failed allocation
 */
 
-static int		execution_message_preparation(t_input *input)
+static int		execution_message_preparation(t_ssl *ssl, t_input *input)
 {
 	char		*new_msg;
 	size_t		pad_len;
 	size_t		bit_len;
+	size_t		i;
 
 	// Number of characters to pad
 	pad_len = 64 - ((input->msg_len + 9) % 64);
@@ -43,7 +44,20 @@ static int		execution_message_preparation(t_input *input)
 
 	// Adding the message length in bits
 	bit_len = input->msg_len * 8;
-	ft_memcpy(new_msg + input->msg_len + 1 + pad_len, &bit_len, 8);
+	if (ft_strequ(ssl->command_name, "sha256"))
+	{
+		// Little-endian addition of the message length
+		i = 0;
+		while (i < 8)
+		{
+			new_msg[input->msg_len + 8 + pad_len - i] = (char)
+				(bit_len >> (i * 8));
+			++i;
+		}
+	}
+	else
+		// Big-endian addition of the message length
+		ft_memcpy(new_msg + input->msg_len + 1 + pad_len, &bit_len, 8);
 
 	// Set the prepared message
 	ft_strdel((char**)&input->msg);
@@ -119,15 +133,18 @@ int				execution(t_ssl *ssl)
 		return (ret_val);
 
 	// Prepare the message
-	if ((ret_val = execution_message_preparation(ssl->input)))
+	if ((ret_val = execution_message_preparation(ssl, ssl->input)))
 		return (ret_val);
 
 	// Implement rotations and produce the digest
 	if (ft_strequ(ssl->command_name, "md5") && (ret_val = md5(ssl->input)))
 		return (ret_val);
+	else if (ft_strequ(ssl->command_name, "sha256")
+		&& (ret_val = sha256(ssl->input)))
+		return (ret_val);
 
 	// Display
-	display_hash(ssl->input);
+	display_hash(ssl->command_name, ssl->input);
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:21 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 23:48:37 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/21 04:53:16 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int				main(int argc, char **argv)
 		return (1);
 	}
 
-	display_t_ssl(ssl); // Debug purpose
+	// display_t_ssl(ssl); // Debug purpose
 
 	// Freeing
 	return_value = ssl->return_value;

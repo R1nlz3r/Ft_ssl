@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/02 05:10:29 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/08 03:11:47 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/21 04:47:22 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int				md5_produce_digest(t_input *input, t_md5 *md)
 	int				i;
 
 	digest = NULL;
-	str = (unsigned char*)&md->h0; // h1 / h2 / h3 are behind in the structure
+	str = (unsigned char*)&md->h0; // + h1 + h2 + h3 behind in the structure
 
 	i = 0;
 	while (i < 16)
@@ -42,17 +42,6 @@ static int				md5_produce_digest(t_input *input, t_md5 *md)
 	input->digest = digest;
 
 	return (0);
-}
-
-
-/*
-**	md5_left_rotate:
-**		Rotates bitwise by the left a 32bits value
-*/
-
-static unsigned int		md5_left_rotate(unsigned int val, unsigned int rot)
-{
-	return ((val << rot) | (val >> (32 - rot)));
 }
 
 
@@ -94,7 +83,7 @@ static void				md5_computations(t_md5 *md)
 		tmp = md->d;
 		md->d = md->c;
 		md->c = md->b;
-		md->b += md5_left_rotate(md->a + md->f + md->k[i] + md->w[md->g],
+		md->b += ft_left_rotate_u32(md->a + md->f + md->k[i] + md->w[md->g],
 			md->r[i]);
 		md->a = tmp;
 
@@ -137,8 +126,8 @@ static void				md5_main_loop(t_input *input, t_md5 *md)
 
 /*
 **	md5:
-**		Initializes the variables used for the md5 algorithm computations
-**		Computes, produces and stores the message digest
+**		Initializes the variables used for the md5 algorithm
+**		Computes the hashing variables and concatenates the message digest
 **		Returns a negative value for a failed allocation
 */
 
