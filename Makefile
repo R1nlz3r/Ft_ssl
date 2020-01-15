@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2019/12/11 18:41:31 by mapandel         ###   ########.fr        #
+#    Updated: 2020/01/15 23:43:00 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,20 +58,27 @@ WHI =		\033[37m
 
 #			Main Rules
 
+.PHONY: all re glu watch
+
 $(NAME): $(LIBPATH) $(OBJ)
 	@make compile_message
-	@make ecompile
+	@make compile_executable
 
-.PHONY: all
 all: $(NAME)
 
-.PHONY: re
 re: fclean all
 
-.PHONY: glu
 glu: fclean all clean
 
+watch:
+	@fswatch $(SRC) $(LIBPATH) | \
+	while read ; \
+		do make -j 8 || afplay /System/Library/Sounds/Glass.aiff ; \
+	done ;
+
 #			Compilation Rules
+
+.PHONY: compile_executable
 
 $(LIBPATH):
 	@cd libft; $(MAKE) -f Makefile
@@ -79,39 +86,36 @@ $(LIBPATH):
 %.o: %.c
 	$(CC) $(CFLAGS) -I $(INC) -c -o $@ $^
 
-ecompile:
+compile_executable:
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBPATH)
 
 #			Clean Rules
 
-.PHONY: lclean
+.PHONY: fclean lfclean clean fclean
+
 lclean:
 	@cd libft; $(MAKE) -f Makefile clean
 
-.PHONY: lfclean
 lfclean:
 	@cd libft; $(MAKE) -f Makefile fclean
 
-.PHONY: clean
 clean: lclean
 	@make clean_message
 	@rm -rf $(OBJ)
 
-.PHONY: fclean
 fclean: clean
 	@make fclean_message
 	@rm -rf $(NAME) $(LIBPATH)
 
 #			Display
 
-.PHONY: compile_message
+.PHONY: compile_message clean_message fclean_message
+
 compile_message:
 	@echo "$(CYA)--::Compiled Ft_ssl::--$(DEF)"
 
-.PHONY: clean_message
 clean_message:
 	@echo "$(PUR)--::Binary Delection::--$(DEF)"
 
-.PHONY: fclean_message
 fclean_message:
 	@echo "$(RED)--::Executable and Library Delection::--$(DEF)"
