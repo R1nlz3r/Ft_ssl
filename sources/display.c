@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/12 05:38:56 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/08 13:45:29 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	display_hash(char *command_name, t_input *input)
 	cmd_uppercase = ft_strtoupper(command_name);
 
 	if (input->flags & FLAG_P)
-		ft_printf("%s", input->input);
+		write(1, input->input, input->input_len);
 	if (!(input->flags & FLAG_P) && !(input->flags & FLAG_Q)
 		&& !(input->flags & FLAG_R))
 	{

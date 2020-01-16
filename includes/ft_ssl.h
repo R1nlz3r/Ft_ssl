@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/13 01:38:58 by mapandel         ###   ########.fr       */
+/*   Updated: 2019/12/23 04:28:06 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct		s_input {
 	char			*input;
 	unsigned char	*msg;
 	char			*digest;
+	size_t			input_len;
 	size_t			msg_len;
 	int				flags;
 	int				pad_0;

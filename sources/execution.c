@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/21 04:13:10 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/15 23:28:17 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,19 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 	int		fd;
 
 	// Filter flags who do not require a file opening
-	if (input->flags & FLAG_P || input->flags & FLAG_S)
+	if (input->flags & FLAG_S)
 	{
 		if (!(input->msg = (unsigned char*)ft_strdup(input->input)))
 			return (-1);
 		input->msg_len = ft_strlen((char*)input->msg);
+		return (0);
+	}
+	else if (input->flags & FLAG_P)
+	{
+		if (!(input->msg = ft_memalloc(input->input_len)))
+			return (-1);
+		ft_memcpy(input->msg, input->input, input->input_len);
+		input->msg_len = input->input_len;
 		return (0);
 	}
 

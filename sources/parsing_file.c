@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:59:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 23:52:46 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/16 18:40:10 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int				parsing_file(t_ssl *ssl, char *input_string, int flag)
 	}
 	else if (flag == FLAG_P)
 	{
-		if (!(new_input->input = get_stdin((ssize_t*)&new_input->msg_len)))
+		if (!(new_input->input = get_stdin((ssize_t*)&new_input->input_len)))
 			return (-1);
 		new_input->flags += FLAG_P;
 	}
