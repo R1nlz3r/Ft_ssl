@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:59:47 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/16 18:40:10 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/17 02:01:12 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,17 @@ int				parsing_file(t_ssl *ssl, char *input_string, int flag)
 	ssl->input = new_input;
 
 	// Set the input argument according to the right flags
-	if (!flag)
+	if (!flag || flag == FLAG_S)
 	{
 		if (!(new_input->input = ft_strdup(input_string)))
 			return (-1);
 	}
-	else if (flag == FLAG_P)
+	else if (flag == FLAG_P || flag == FLAG_NO_ARGUMENT)
 	{
 		if (!(new_input->input = get_stdin((ssize_t*)&new_input->input_len)))
 			return (-1);
-		new_input->flags += FLAG_P;
 	}
-	else if (flag == FLAG_S)
-	{
-		if (!(new_input->input = ft_strdup(input_string)))
-			return (-1);
-		new_input->flags += FLAG_S;
-	}
-	new_input->flags += ssl->flags;
+	new_input->flags += flag + ssl->flags;
 
 	// Algorithm execution based on the argument
 	if (execution(ssl) == -1)
@@ -56,7 +49,6 @@ int				parsing_file(t_ssl *ssl, char *input_string, int flag)
 		del_t_input(&ssl->input);
 		return (-1);
 	}
-
 	del_t_input(&ssl->input);
 
 	return (0);

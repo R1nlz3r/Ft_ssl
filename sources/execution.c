@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/15 23:28:17 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/17 01:35:09 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int		execution_open_file(t_ssl *ssl, t_input *input)
 		input->msg_len = ft_strlen((char*)input->msg);
 		return (0);
 	}
-	else if (input->flags & FLAG_P)
+	else if (input->flags & FLAG_P || input->flags & FLAG_NO_ARGUMENT)
 	{
 		if (!(input->msg = ft_memalloc(input->input_len)))
 			return (-1);

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/10 00:01:09 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/17 01:59:24 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ int				parsing (t_ssl *ssl)
 		++argv_i;
 	}
 
+	// No arguments
+	if (argv_i == ssl->argc && !ssl->bool_one_conversion_done
+		&& parsing_file(ssl, NULL, FLAG_NO_ARGUMENT))
+		return (-1);
+
 	// Parsing files
 	while (argv_i < ssl->argc)
 	{
@@ -80,10 +85,6 @@ int				parsing (t_ssl *ssl)
 			return (-1);
 		++argv_i;
 	}
-
-	// No arguments
-	if (ssl->argc == 2 && parsing_file(ssl, NULL, FLAG_P))
-		return (-1);
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:45:46 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/09 18:57:25 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/17 01:58:54 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_ssl		*init_t_ssl(t_ssl *ssl, int argc, char **argv)
 		return (NULL);
 	ssl->command_name = NULL;
 	ssl->flags = 0;
+	ssl->bool_one_conversion_done = 0;
 	ssl->return_value = 0;
 	ssl->argc = (size_t)argc;
 	ssl->input = NULL;

@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/23 04:28:06 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/01/17 01:56:07 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@
 
 // Flags masks
 # define FLAG_END_OF_PARAMETERS		1
-# define FLAG_P						2
-# define FLAG_Q						4
-# define FLAG_R						8
-# define FLAG_S						16
+# define FLAG_NO_ARGUMENT			2
+# define FLAG_P						4
+# define FLAG_Q						8
+# define FLAG_R						16
+# define FLAG_S						32
 
 
 typedef struct		s_sha256 {
@@ -137,7 +138,9 @@ typedef struct		s_ssl {
 	char		*command_name;
 	t_input		*input;
 	int			flags;
+	int			bool_one_conversion_done;
 	int			return_value;
+	int			pad_0;
 	size_t		argc;
 	char		**argv;
 }					t_ssl;
