@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_leak_report.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/14 00:54:21 by mapandel          #+#    #+#             */
-/*   Updated: 2020/02/18 23:26:54 by mapandel         ###   ########.fr       */
+/*   Created: 2020/02/17 23:07:33 by mapandel          #+#    #+#             */
+/*   Updated: 2020/02/19 05:23:09 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,22 @@ int				main(int argc, char **argv)
 	// Initialization
 	ssl = NULL;
 	if (!(ssl = init_t_ssl(ssl, argc, argv)))
-		return (1);
+	{
+		return_value = system("leaks ft_ssl_leak_report &> leak_report");
+		return (WEXITSTATUS(return_value));
+	}
 
 	// Parsing
 	if (parsing(ssl))
 	{
 		del_t_ssl(&ssl);
-		return (1);
+		return_value = system("leaks ft_ssl_leak_report &> leak_report");
+		return (WEXITSTATUS(return_value));
 	}
 
-	// display_t_ssl(ssl); // Debug purpose
-
 	// Freeing
-	return_value = ssl->return_value;
 	del_t_ssl(&ssl);
 
-	// infinite_loop(&ssl); // Debug purpose
-	return (return_value);
+	return_value = system("leaks ft_ssl_leak_report &> leak_report");
+	return (WEXITSTATUS(return_value));
 }

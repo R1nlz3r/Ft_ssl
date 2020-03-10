@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 04:00:58 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/20 11:00:24 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/03/10 14:23:47 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,19 @@ static int				sha256_produce_digest_2(t_input *input,
 	unsigned int hashing_value)
 {
 	char			*tmp;
+	char			*paded;
 
 	if (!(tmp = ft_lltoabase_unsigned(hashing_value, 16)))
 		return (-1);
-	if (!tmp[1] && !(input->digest = ft_strjoin_leakless(input->digest, "0")))
+	while (tmp && ft_strlen_nullcrashless(tmp) < 8)
+	{
+		paded = ft_strjoin("0", tmp);
+		ft_strdel(&tmp);
+		tmp = paded;
+	}
+	if (!tmp)
 		return (-1);
+
 	if (!(input->digest = ft_strjoin_leakless(input->digest, tmp)))
 		return (-1);
 	ft_strdel(&tmp);
@@ -48,48 +56,13 @@ static int				sha256_produce_digest(t_input *input, t_sha256 *sha)
 	return (0);
 }
 
-/*
-**	sha256_computations:
-**		Confuses and rotates the parameters according to a 512bits word
-**		Thoses will update the hasing values at the end
-*/
-
-static void				sha256_computations(t_sha256 *sha)
-{
-	size_t		i;
-
-	i = 0;
-	while (i < 64)
-	{
-		sha->s0 = ft_right_rotate_u32(sha->e, 6)
-			^ ft_right_rotate_u32(sha->e, 11) ^ ft_right_rotate_u32(sha->e, 25);
-		sha->s1 = ft_right_rotate_u32(sha->a, 2)
-			^ ft_right_rotate_u32(sha->a, 13) ^ ft_right_rotate_u32(sha->a, 22);
-		sha->ch = (sha->e & sha->f) ^ (~sha->e & sha->g);
-		sha->maj = (sha->a & sha->b) ^ (sha->a & sha->c) ^ (sha->b & sha->c);
-		sha->tmp1 = sha->h + sha->s0 + sha->ch + sha->k[i] + sha->w[i];
-		sha->tmp2 = sha->s1 + sha->maj;
-
-		sha->h = sha->g;
-		sha->g = sha->f;
-		sha->f = sha->e;
-		sha->e = sha->d + sha->tmp1;
-		sha->d = sha->c;
-		sha->c = sha->b;
-		sha->b = sha->a;
-		sha->a = sha->tmp1 + sha->tmp2;
-
-		++i;
-	}
-}
-
 
 /*
 **	sha256_setup_words:
 **		Sets up the words used for the next round of encryption
 */
 
-static void		sha256_setup_words(t_input *input, t_sha256 *sha, size_t block)
+static void		sha256_setup_words(t_input *input, t_sha256 *sha)
 {
 	size_t		i;
 
@@ -97,10 +70,10 @@ static void		sha256_setup_words(t_input *input, t_sha256 *sha, size_t block)
 	while (i < 16)
 	{
 		sha->w[i] = (unsigned int)
-			(input->msg[block + i * 4 + 0] << 24
-			| input->msg[block + i * 4 + 1] << 16
-			| input->msg[block + i * 4 + 2] << 8
-			| input->msg[block + i * 4 + 3]);
+			(input->msg[i * 4 + 0] << 24
+			| input->msg[i * 4 + 1] << 16
+			| input->msg[i * 4 + 2] << 8
+			| input->msg[i * 4 + 3]);
 		++i;
 	}
 	while (i < 64)
@@ -123,14 +96,15 @@ static void		sha256_setup_words(t_input *input, t_sha256 *sha, size_t block)
 **			to the results of each round
 */
 
-static void		sha256_main_loop(t_input *input, t_sha256 *sha)
+static int		sha256_main_loop(t_input *input, t_sha256 *sha)
 {
-	size_t		i;
+	int		ret;
 
-	i = 0;
-	while (i < input->msg_len)
+	while (1)
 	{
-		sha256_setup_words(input, sha, i);
+		if ((ret = sha256_message_obtaining(input)))
+			return (ret);
+		sha256_setup_words(input, sha);
 
 		sha->a = sha->h0;
 		sha->b = sha->h1;
@@ -143,6 +117,7 @@ static void		sha256_main_loop(t_input *input, t_sha256 *sha)
 
 		sha256_computations(sha);
 
+		// Update hashing values
 		sha->h0 += sha->a;
 		sha->h1 += sha->b;
 		sha->h2 += sha->c;
@@ -152,29 +127,24 @@ static void		sha256_main_loop(t_input *input, t_sha256 *sha)
 		sha->h6 += sha->g;
 		sha->h7 += sha->h;
 
-		i += 64;
+		if (sha256_message_dumping(input))
+			break ;
 	}
+
+	return (0);
 }
 
 
 /*
-**	sha256:
+**	sha256_init_constants:
 **		Initializes the variables used for the sha256 algorithm
-**		Computes the hashing variables and concatenates the message digest
-**		Returns a negative value for a failed allocation
 */
 
-int				sha256(t_input *input)
+static void				sha256_init_constants(t_sha256 *sha)
 {
-	t_sha256	*sha;
 	int			i;
 	int			j;
 
-	// Data container for the computations variables
-	if (!(sha = ft_memalloc(sizeof(t_sha256))))
-		return (-1);
-
-	// Initialization
 	i = 0;
 	j = 2;
 	while (i < 64)
@@ -191,15 +161,36 @@ int				sha256(t_input *input)
 	sha->h5 = 2600822924;
 	sha->h6 = 528734635;
 	sha->h7 = 1541459225;
+}
+
+
+/*
+**	sha256:
+**		Initializes the variables used for the sha256 algorithm
+**		Computes the hashing variables and concatenates the message digest
+**		Returns a negative value for a failed allocation
+*/
+
+int				sha256(t_input *input)
+{
+	t_sha256	*sha;
+	int			ret_val;
+
+	// Data container for the computations variables
+	if (!(sha = ft_memalloc(sizeof(t_sha256))))
+		return (-1);
+
+	// Initialization
+	sha256_init_constants(sha);
 
 	// Iteration
-	sha256_main_loop(input, sha);
+	ret_val = sha256_main_loop(input, sha);
 
 	// Digest contraction
-	if (sha256_produce_digest(input, sha))
-		return (-1);
+	if (!ret_val)
+		ret_val = sha256_produce_digest(input, sha);
 
 	ft_memdel((void**)&sha);
 
-	return (0);
+	return (ret_val);
 }

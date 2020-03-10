@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:59:47 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/17 02:01:12 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/02/16 04:44:04 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,9 @@ int				parsing_file(t_ssl *ssl, char *input_string, int flag)
 
 	// Set the input argument according to the right flags
 	if (!flag || flag == FLAG_S)
-	{
-		if (!(new_input->input = ft_strdup(input_string)))
-			return (-1);
-	}
-	else if (flag == FLAG_P || flag == FLAG_NO_ARGUMENT)
-	{
-		if (!(new_input->input = get_stdin((ssize_t*)&new_input->input_len)))
-			return (-1);
-	}
+		new_input->input = ft_strdup(input_string);
+	if (flag == FLAG_S)
+		new_input->msg_total_len = ft_strlen(input_string);
 	new_input->flags += flag + ssl->flags;
 
 	// Algorithm execution based on the argument

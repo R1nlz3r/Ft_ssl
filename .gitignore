@@ -4,4 +4,5 @@
 *.swp
 *.o
 libft.a
+ft_ssl_leak_report
 ft_ssl

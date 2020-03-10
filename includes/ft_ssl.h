@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/17 01:56:07 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/02/03 03:25:34 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,11 @@ typedef struct		s_md5 {
 typedef struct		s_input {
 	char			*input;
 	unsigned char	*msg;
-	char			*digest;
-	size_t			input_len;
 	size_t			msg_len;
+	size_t			msg_total_len;
+	char			*digest;
+	int				fd;
 	int				flags;
-	int				pad_0;
 }					t_input;
 
 
@@ -135,14 +135,14 @@ typedef struct		s_input {
 */
 
 typedef struct		s_ssl {
-	char		*command_name;
-	t_input		*input;
-	int			flags;
-	int			bool_one_conversion_done;
-	int			return_value;
-	int			pad_0;
-	size_t		argc;
-	char		**argv;
+	char			*command_name;
+	t_input			*input;
+	int				flags;
+	int				bool_one_conversion_done;
+	int				return_value;
+	int				pad_0;
+	size_t			argc;
+	char			**argv;
 }					t_ssl;
 
 // debug.c
@@ -161,6 +161,13 @@ int					execution(t_ssl *ssl);
 // md5.c
 int					md5(t_input *input);
 
+// md5_message_handling.c
+int					md5_message_dumping(t_input *input);
+int 				md5_message_obtaining(t_input *input);
+
+// md5_computations.c
+void				md5_computations(t_md5 *md);
+
 // parsing_file.c
 int					parsing_file(t_ssl *ssl, char *input_string, int flag);
 
@@ -172,6 +179,13 @@ int					parsing (t_ssl *ssl);
 
 // sha256.c
 int					sha256(t_input *input);
+
+// sha256_message_handling.c
+int					sha256_message_dumping(t_input *input);
+int 				sha256_message_obtaining(t_input *input);
+
+// sha256_computations.c
+void				sha256_computations(t_sha256 *sha);
 
 // touch_t_input.c
 t_input				*init_t_input(void);

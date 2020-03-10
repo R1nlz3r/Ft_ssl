@@ -1,3 +1,6 @@
 [submodule "Libft"]
 	path = Libft
 	url = https://github.com/R1nlz3r/Libft.git
+[submodule "Libunit"]
+	path = Libunit
+	url = https://github.com/R1nlz3r/Libunit.git

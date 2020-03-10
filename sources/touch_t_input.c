@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:50:51 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/23 04:25:36 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/02/05 15:14:44 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ t_input		*init_t_input(void)
 	node->input = NULL;
 	node->msg = NULL;
 	node->digest = NULL;
-	node->input_len = 0;
 	node->msg_len = 0;
+	node->msg_total_len = 0;
 	node->flags = 0;
 	return (node);
 }

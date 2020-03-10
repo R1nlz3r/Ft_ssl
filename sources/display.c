@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/17 02:28:21 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/02/21 00:20:09 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,27 +23,32 @@
 int		display_parsing_error(t_ssl *ssl, int error_code, char *justification)
 {
 	if (error_code == ERR_NO_ARG)
-		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
+		ft_putendl_fd("usage: ft_ssl command [command opts] [command args]",
+			2);
 	else if (error_code == ERR_INVALID_CMD_NAME)
 	{
-		ft_printf("%s: Error: '%s' is an invalid command.\n\n\
-Standard commands:\n\n\
-Message Digest commands:\n\
-md5\n\
-sha256\n\n\
-Cipher commands:\n", ssl->argv[0], justification);
+		ft_putstr_fd("ft_ssl: Error: '", 2);
+		ft_putstr_fd(justification, 2);
+		ft_putendl_fd("' is an invalid command.\n\nStandard commands:\n\n\
+Message Digest commands:\nmd5\nsha256\n\nCipher commands:", 2);
 	}
 	else if (error_code == ERR_OPT_WITHOUT_ARG)
 	{
-		ft_printf("%s: %s: option requires an argument -- %c\n\
-usage: ft_ssl command [-pqr] [-s string] [files ...]\n",
-			ssl->argv[0], ssl->command_name, justification[0]);
+		ft_putstr_fd("ft_ssl: ", 2);
+		ft_putstr_fd(ssl->command_name, 2);
+		ft_putstr_fd(": option requires an argument -- ", 2);
+		ft_putchar_fd(justification[0], 2);
+		ft_putendl_fd("\nusage: ft_ssl command [-pqr] [-s string] \
+[files ...]", 2);
 	}
 	else if (error_code == ERR_INVALID_OPT)
 	{
-		ft_printf("%s: %s: illegal option -- %c\n\
-usage: ft_ssl command [-pqr] [-s string] [files ...]\n",
-			ssl->argv[0], ssl->command_name, justification[0]);
+		ft_putstr_fd("ft_ssl: ", 2);
+		ft_putstr_fd(ssl->command_name, 2);
+		ft_putstr_fd(": illegal option -- ", 2);
+		ft_putchar_fd(justification[0], 2);
+		ft_putendl_fd("\nusage: ft_ssl command [-pqr] [-s string] \
+[files ...]", 2);
 	}
 
 	return (-1);
@@ -63,8 +68,6 @@ void	display_hash(char *command_name, t_input *input)
 
 	cmd_uppercase = ft_strtoupper(command_name);
 
-	if (input->flags & FLAG_P)
-		write(1, input->input, input->input_len);
 	if (!(input->flags & FLAG_P || input->flags & FLAG_NO_ARGUMENT
 		|| input->flags & FLAG_Q || input->flags & FLAG_R))
 	{

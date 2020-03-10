@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/02 05:10:29 by mapandel          #+#    #+#             */
-/*   Updated: 2019/12/21 04:47:22 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/03/06 16:24:58 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,67 +46,21 @@ static int				md5_produce_digest(t_input *input, t_md5 *md)
 
 
 /*
-**	md5_computations:
-**		Confuses and rotates the parameters according to a 512bits word
-**		Thoses will update the hasing values at the end
-*/
-
-static void				md5_computations(t_md5 *md)
-{
-	unsigned int	i;
-	unsigned int	tmp;
-
-	i = 0;
-	while (i < 64)
-	{
-		if (i < 16)
-		{
-			md->f = (md->b & md->c) | (~md->b & md->d);
-			md->g = i;
-		}
-		else if (i < 32)
-		{
-			md->f = (md->d & md->b) | (~md->d & md->c);
-			md->g = (i * 5 + 1) % 16;
-		}
-		else if (i < 48)
-		{
-			md->f = md->b ^ md->c ^ md->d;
-			md->g = (i * 3 + 5) % 16;
-		}
-		else
-		{
-			md->f = md->c ^ (md->b | ~md->d);
-			md->g = (i * 7) % 16;
-		}
-
-		tmp = md->d;
-		md->d = md->c;
-		md->c = md->b;
-		md->b += ft_left_rotate_u32(md->a + md->f + md->k[i] + md->w[md->g],
-			md->r[i]);
-		md->a = tmp;
-
-		++i;
-	}
-}
-
-
-/*
 **	md5_main_loop:
 **		Launches rounds of encryption per 512bits of the message
 **		Prepares and updates the hasing values according
 **			to the results of each round
 */
 
-static void				md5_main_loop(t_input *input, t_md5 *md)
+static int				md5_main_loop(t_input *input, t_md5 *md)
 {
-	size_t		i;
+	int		ret;
 
-	i = 0;
-	while (i < input->msg_len)
+	while (1)
 	{
-		md->w = (void*)(input->msg + i);
+		if ((ret = md5_message_obtaining(input)))
+			return (ret);
+		md->w = (unsigned int*)(unsigned long long)input->msg;
 
 		md->a = md->h0;
 		md->b = md->h1;
@@ -115,12 +69,40 @@ static void				md5_main_loop(t_input *input, t_md5 *md)
 
 		md5_computations(md);
 
+		// Update hashing values
 		md->h0 += md->a;
 		md->h1 += md->b;
 		md->h2 += md->c;
 		md->h3 += md->d;
-		i += 64;
+
+		if (md5_message_dumping(input))
+			break ;
 	}
+
+	return (0);
+}
+
+
+/*
+**	md5_init_constants:
+**		Initializes the variables used for the md5 algorithm
+*/
+
+static void				md5_init_constants(t_md5 *md)
+{
+	int		i;
+
+	i = 0;
+	while (i < 64)
+	{
+		md->r[i] = md5_rotations[i];
+		md->k[i] = (unsigned int)(floor(fabs(sin(i + 1)) * pow(2, 32)));
+		++i;
+	}
+	md->h0 = 1732584193;
+	md->h1 = 4023233417;
+	md->h2 = 2562383102;
+	md->h3 = 271733878;
 }
 
 
@@ -134,33 +116,23 @@ static void				md5_main_loop(t_input *input, t_md5 *md)
 int						md5(t_input *input)
 {
 	t_md5		*md;
-	int			i;
+	int			ret_val;
 
 	// Data container for the computations variables
 	if (!(md = ft_memalloc(sizeof(t_md5))))
 		return (-1);
 
 	// Initialization
-	i = 0;
-	while (i < 64)
-	{
-		md->r[i] = md5_rotations[i];
-		md->k[i] = (unsigned int)(floor(fabs(sin(i + 1)) * pow(2, 32)));
-		++i;
-	}
-	md->h0 = 1732584193;
-	md->h1 = 4023233417;
-	md->h2 = 2562383102;
-	md->h3 = 271733878;
+	md5_init_constants(md);
 
 	// Iteration
-	md5_main_loop(input, md);
+	ret_val = md5_main_loop(input, md);
 
 	// Digest contraction
-	if (md5_produce_digest(input, md))
-		return (-1);
+	if (!ret_val)
+		ret_val = md5_produce_digest(input, md);
 
 	ft_memdel((void**)&md);
 
-	return (0);
+	return (ret_val);
 }
