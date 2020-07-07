@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2020/03/10 17:02:45 by mapandel         ###   ########.fr        #
+#    Updated: 2020/07/07 11:12:42 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -117,8 +117,7 @@ compile_leak_report_executable:
 .PHONY:				test
 
 test:				$(NAME) $(EXE_LEAK_REPORT)
-	@cp $(NAME) $(TEST)/ft_ssl_tests/ft_ssl/;
-	@cp $(EXE_LEAK_REPORT) $(TEST)/ft_ssl_tests/ft_ssl/;
+	@ln -fs $(shell pwd) $(TEST)/ft_ssl_tests/Ft_ssl;
 	@cp $(LIBPATH) $(TEST)/libft/;
 	@make test -C $(TEST)/ft_ssl_tests/;
 
