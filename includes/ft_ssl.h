@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2020/02/03 03:25:34 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/07/15 15:41:25 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <fcntl.h>
 # include <math.h>
-# include "../Libft/includes/libft.h"
+# include "libft.h"
 
 // Error codes
 # define ERR_NO_ARG					1

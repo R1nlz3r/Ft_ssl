@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2020/07/07 12:48:49 by mapandel         ###   ########.fr        #
+#    Updated: 2020/07/15 15:40:11 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ NAME =				ft_ssl
 
 CC = 				clang
 CFLAGS = 			-Wall -Wextra -Werror -Weverything
+
+MATH_DLIB =			-lm
 
 #			Sources
 
@@ -38,6 +40,9 @@ SRC =				sources/debug.c \
 OBJ =				$(SRC:.c=.o)
 
 INC =				includes
+
+REQ_MATH_DLIB =		sources/md5.c \
+					sources/sha256.c \
 
 #			Library Path
 
@@ -104,7 +109,11 @@ $(LIBPATH):
 	@cd $(LIB); $(MAKE) -f Makefile
 
 %.o:				%.c
-	$(CC) $(CFLAGS) -I $(INC) -c -o $@ $^
+ifeq ($<, $(REQ_MATH_DLIB))
+	$(CC) $(CFLAGS) -I $(INC) -I $(LIBINC) -c -o $@ $< -lm
+else
+	$(CC) $(CFLAGS) -I $(INC) -I $(LIBINC) -c -o $@ $<
+endif
 
 compile_executable:
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBPATH)
