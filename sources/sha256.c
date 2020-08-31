@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 04:00:58 by mapandel          #+#    #+#             */
-/*   Updated: 2020/03/10 14:23:47 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/08/08 20:17:50 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 */
 
 static int				sha256_produce_digest_2(t_input *input,
-	unsigned int hashing_value)
+	uint32_t hashing_value)
 {
 	char			*tmp;
 	char			*paded;
@@ -69,7 +69,7 @@ static void		sha256_setup_words(t_input *input, t_sha256 *sha)
 	i = 0;
 	while (i < 16)
 	{
-		sha->w[i] = (unsigned int)
+		sha->w[i] = (uint32_t)
 			(input->msg[i * 4 + 0] << 24
 			| input->msg[i * 4 + 1] << 16
 			| input->msg[i * 4 + 2] << 8
@@ -90,7 +90,7 @@ static void		sha256_setup_words(t_input *input, t_sha256 *sha)
 
 /*
 **	sha256_main_loop:
-**		Launches rounds of encryption per 512bits of the message
+**		Launches rounds of encryption per 512 bits of the message
 **		Sets up the next words used
 **		Prepares and updates the hasing values according
 **			to the results of each round
@@ -143,15 +143,12 @@ static int		sha256_main_loop(t_input *input, t_sha256 *sha)
 static void				sha256_init_constants(t_sha256 *sha)
 {
 	int			i;
-	int			j;
 
 	i = 0;
-	j = 2;
 	while (i < 64)
 	{
-		if (ft_isprime(j))
-			sha->k[i++] = (unsigned int)(floor(cbrt(j) * pow(2, 32)));
-		++j;
+		sha->k[i] = SHA256_K[i];
+		++i;
 	}
 	sha->h0 = 1779033703;
 	sha->h1 = 3144134277;

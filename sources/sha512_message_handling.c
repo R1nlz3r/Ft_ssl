@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sha256_message_handling.c                          :+:      :+:    :+:   */
+/*   sha512_message_handling.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/01 04:42:50 by mapandel          #+#    #+#             */
-/*   Updated: 2020/07/17 12:31:22 by mapandel         ###   ########.fr       */
+/*   Created: 2020/07/17 12:22:39 by mapandel          #+#    #+#             */
+/*   Updated: 2020/07/17 12:44:25 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
 /*
-**	sha256_message_buffer_preparation:
+**	sha512_message_buffer_preparation:
 **
 */
 
-static unsigned char		*sha256_message_buffer_preparation(t_input *input,
+static unsigned char		*sha512_message_buffer_preparation(t_input *input,
 	unsigned char *static_buffer)
 {
 	size_t					pad_len;
 	size_t					bit_len;
 	size_t					i;
 
-	pad_len = 64 - ((input->msg_len + 9) % 64);
-	if (pad_len == 64)
+	pad_len = 128 - ((input->msg_len + 9) % 128);
+	if (pad_len == 128)
 		pad_len = 0;
 
 	if (!(static_buffer = (unsigned char*)ft_strnew(input->msg_len
@@ -49,11 +49,11 @@ static unsigned char		*sha256_message_buffer_preparation(t_input *input,
 
 
 /*
-**	sha256_message_buffer_handling:
+**	sha512_message_buffer_handling:
 **
 */
 
-static int		sha256_message_buffer_handling(t_input *input, int bool_dump)
+static int		sha512_message_buffer_handling(t_input *input, int bool_dump)
 {
 	static unsigned char	*static_buffer = NULL;
 
@@ -64,19 +64,19 @@ static int		sha256_message_buffer_handling(t_input *input, int bool_dump)
 	}
 	else if (!static_buffer)
 	{
-		static_buffer = sha256_message_buffer_preparation(input, static_buffer);
+		static_buffer = sha512_message_buffer_preparation(input, static_buffer);
 		if (!(input->flags & FLAG_S))
 			ft_strdel((char**)&input->msg);
-		input->msg = ft_memdup(static_buffer, 64);
+		input->msg = ft_memdup(static_buffer, 128);
 	}
 	else
 	{
-		if (input->msg_len < 55)
+		if (input->msg_len < 119)
 			input->msg_len = 0;
 		else
-			input->msg_len -= 55;
+			input->msg_len -= 119;
 		ft_strdel((char**)&input->msg);
-		input->msg = ft_memdup(static_buffer + 64, 64);
+		input->msg = ft_memdup(static_buffer + 128, 128);
 	}
 
 	return (0);
@@ -84,11 +84,11 @@ static int		sha256_message_buffer_handling(t_input *input, int bool_dump)
 
 
 /*
-**	sha256_message_obtaining:
+**	sha512_message_obtaining:
 **
 */
 
-int 			sha256_message_obtaining(t_input *input)
+int 			sha512_message_obtaining(t_input *input)
 {
 	if ((input->flags & FLAG_S))
 	{
@@ -99,8 +99,8 @@ int 			sha256_message_obtaining(t_input *input)
 		}
 		else
 		{
-			if (input->msg_len > 64 && (input->msg_len -= 64))
-				input->msg += 64;
+			if (input->msg_len > 128 && (input->msg_len -= 128))
+				input->msg += 128;
 			else
 				input->msg_len = 0;
 		}
@@ -108,7 +108,8 @@ int 			sha256_message_obtaining(t_input *input)
 	else
 	{
 		input->msg_len = 0;
-		input->msg = get_file_segment(input->fd, 64, (ssize_t*)&input->msg_len);
+		input->msg = get_file_segment(input->fd, 128,
+			(ssize_t*)&input->msg_len);
 		input->msg_total_len += input->msg_len;
 		if ((ssize_t)input->msg_len == -1)
 			return (1);
@@ -119,27 +120,27 @@ int 			sha256_message_obtaining(t_input *input)
 	if (input->flags & FLAG_P)
 		write(1, input->msg, input->msg_len);
 
-	if (input->msg_len < 64)
-		return (sha256_message_buffer_handling(input, 0));
+	if (input->msg_len < 128)
+		return (sha512_message_buffer_handling(input, 0));
 
 	return (0);
 }
 
 
 /*
-**	sha256_message_dumping:
+**	sha512_message_dumping:
 **
 */
 
-int				sha256_message_dumping(t_input *input)
+int				sha512_message_dumping(t_input *input)
 {
 	if (!(input->flags & FLAG_S))
 		ft_strdel((char**)&input->msg);
 
 	// Dumps the static string
-	if (input->msg_len < 55)
+	if (input->msg_len < 119)
 	{
-		sha256_message_buffer_handling(input, 1);
+		sha512_message_buffer_handling(input, 1);
 		return (1);
 	}
 

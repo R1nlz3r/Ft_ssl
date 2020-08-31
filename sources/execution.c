@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/01 02:14:07 by mapandel          #+#    #+#             */
-/*   Updated: 2020/02/21 04:47:34 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/07/18 12:03:16 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,9 @@ int				execution(t_ssl *ssl)
 	// Message Implement rotations and produce the digest
 	if ((ft_strequ(ssl->command_name, "md5") && (ret_val = md5(ssl->input)))
 		|| (ft_strequ(ssl->command_name, "sha256")
-		&& (ret_val = sha256(ssl->input))))
+		&& (ret_val = sha256(ssl->input)))
+		|| (ft_strequ(ssl->command_name, "sha512")
+		&& (ret_val = sha512(ssl->input))))
 	{
 		ssl->return_value = 1;
 		ft_putstr_fd("ft_ssl: ", 2);

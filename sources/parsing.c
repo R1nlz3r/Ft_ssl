@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 01:28:47 by mapandel          #+#    #+#             */
-/*   Updated: 2020/01/17 01:59:24 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/07/18 12:03:48 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ static int		parsing_command_name (t_ssl *ssl)
 	// Parsing command name
 	if (ssl->argc >= 2)
 	{
-		if (ft_strequ(ssl->argv[1], "md5") || ft_strequ(ssl->argv[1], "sha256"))
+		if (ft_strequ(ssl->argv[1], "md5")
+			|| ft_strequ(ssl->argv[1], "sha256")
+			|| ft_strequ(ssl->argv[1], "sha512"))
 		{
 			if (!(ssl->command_name = ft_strdup(ssl->argv[1])))
 				return (-1);
