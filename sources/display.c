@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/24 23:24:03 by mapandel          #+#    #+#             */
-/*   Updated: 2020/02/21 00:20:09 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/02 18:18:53 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		display_parsing_error(t_ssl *ssl, int error_code, char *justification)
 		ft_putstr_fd("ft_ssl: Error: '", 2);
 		ft_putstr_fd(justification, 2);
 		ft_putendl_fd("' is an invalid command.\n\nStandard commands:\n\n\
-Message Digest commands:\nmd5\nsha256\n\nCipher commands:", 2);
+Message Digest commands:\nmd5\nsha256\nsha512\n\nCipher commands:", 2);
 	}
 	else if (error_code == ERR_OPT_WITHOUT_ARG)
 	{
