@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2020/09/17 23:56:56 by mapandel         ###   ########.fr        #
+#    Updated: 2020/09/23 01:21:20 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,6 @@ SRC =				sources/commands/message_digest/md5.c \
 					sources/execution/message.c \
 					sources/exit/error_handler.c \
 					sources/exit/exit_failure.c \
-					sources/parsing/cipher_flags.c \
 					sources/parsing/files.c \
 					sources/parsing/flags.c \
 					sources/parsing/message_digest_flags.c \
