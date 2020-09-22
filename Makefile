@@ -6,7 +6,7 @@
 #    By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/13 08:56:25 by mapandel          #+#    #+#              #
-#    Updated: 2020/08/31 17:08:03 by mapandel         ###   ########.fr        #
+#    Updated: 2020/09/17 23:56:56 by mapandel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,28 +15,32 @@ NAME =				ft_ssl
 #			Compilation
 
 CC = 				clang
-CFLAGS = 			-Wall -Wextra -Werror -Weverything
+CFLAGS = 			#-Wall -Wextra -Werror -Weverything
 
 #			Sources
 
-SRC =				sources/debug.c \
-					sources/display.c \
-					sources/execution.c \
+SRC =				sources/commands/message_digest/md5.c \
+					sources/commands/message_digest/sha256.c \
+					sources/commands/message_digest/sha512.c \
+					sources/data_structures/t_arg.c \
+					sources/data_structures/t_cmd.c \
+					sources/data_structures/t_flag.c \
+					sources/data_structures/t_ssl.c \
+					sources/display/errors.c \
+					sources/display/hash.c \
+					sources/display/usages.c \
+					sources/execution/buffer.c \
+					sources/execution/execution.c \
+					sources/execution/file_access.c \
+					sources/execution/message.c \
+					sources/exit/error_handler.c \
+					sources/exit/exit_failure.c \
+					sources/parsing/cipher_flags.c \
+					sources/parsing/files.c \
+					sources/parsing/flags.c \
+					sources/parsing/message_digest_flags.c \
+					sources/parsing/parsing.c \
 					sources/main.c \
-					sources/md5.c \
-					sources/md5_message_handling.c \
-					sources/md5_computations.c \
-					sources/parsing_file.c \
-					sources/parsing_flags.c \
-					sources/parsing.c \
-					sources/sha256.c \
-					sources/sha256_message_handling.c \
-					sources/sha256_computations.c \
-					sources/sha512.c \
-					sources/sha512_message_handling.c \
-					sources/sha512_computations.c \
-					sources/touch_t_input.c \
-					sources/touch_t_ssl.c \
 
 OBJ =				$(SRC:.c=.o)
 
@@ -54,7 +58,8 @@ TEST =				libunit
 
 EXE_LEAK_REPORT =	ft_ssl_leak_report
 
-SRC_LEAK_REPORT =	$(subst sources/main.c, sources/main_leak_report.c, $(SRC))
+SRC_LEAK_REPORT =	$(subst sources/main.c, sources/debug/main.c, \
+					$(subst sources/exit/exit_failure.c, sources/debug/exit_failure.c, $(SRC)))
 
 OBJ_LEAK_REPORT =	$(SRC_LEAK_REPORT:.c=.o)
 

@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_leak_report.c                                 :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 23:07:33 by mapandel          #+#    #+#             */
-/*   Updated: 2020/02/19 05:23:09 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/21 19:50:38 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
 /*
-**	main:
-**		Initializes the t_ssl structure "container" for the project
-**		Parses arguments to find the algorithm, flags and inputs
-**		Executions of the choosen algorithm follows a newly parsed argument
-**		And finishes by freeing all the allocated memory blocs
-**		Returns zero on success or a positive value
-**			if at least one of the input files could not be read
+**	main: debug
+**		This file replaces the real main.c to produce a leak report
+**		Returns the 'leaks' command return value
 */
 
 int				main(int argc, char **argv)
@@ -27,23 +23,14 @@ int				main(int argc, char **argv)
 	t_ssl	*ssl;
 	int		return_value;
 
-	// Initialization
 	ssl = NULL;
 	if (!(ssl = init_t_ssl(ssl, argc, argv)))
-	{
-		return_value = system("leaks ft_ssl_leak_report &> leak_report");
-		return (WEXITSTATUS(return_value));
-	}
+		error_handler(ssl, ERR_MEM_ALLOCATION, NULL);
 
-	// Parsing
-	if (parsing(ssl))
-	{
-		del_t_ssl(&ssl);
-		return_value = system("leaks ft_ssl_leak_report &> leak_report");
-		return (WEXITSTATUS(return_value));
-	}
+	parsing(ssl);
 
-	// Freeing
+	return_value = ssl->return_value;
+
 	del_t_ssl(&ssl);
 
 	return_value = system("leaks ft_ssl_leak_report &> leak_report");
