@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 00:54:44 by mapandel          #+#    #+#             */
-/*   Updated: 2020/09/22 04:12:11 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/23 01:04:34 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,15 @@
 /* Flags masks */
 # define FLAG_END_OF_PARAMETERS		1			/* Stops parameters parsing */
 # define FLAG_NO_ARGUMENT			2			/* No argument given to the command */
-/* Cipher specific flags */
-# define FLAG_D						4			/* Decode / decrypt mode */
-# define FLAG_E						8			/* Encode / encrypt mode (default) */
-# define FLAG_I						16			/* Input file */
-# define FLAG_O						32			/* Output file */
 /* Message digest specific flags */
-# define FLAG_P						64			/* Echo STDIN to STDOUT and append the checksum to STDOUT */
-# define FLAG_Q						128			/* Quiet mode */
-# define FLAG_R						256			/* Reverse the format of the output */
-# define FLAG_S						512			/* Print the sum of the given string */
+# define FLAG_P						4			/* Echo STDIN to STDOUT and append the checksum to STDOUT */
+# define FLAG_Q						8			/* Quiet mode */
+# define FLAG_R						16			/* Reverse the format of the output */
+# define FLAG_S						32			/* Print the sum of the given string */
 
 
 /* Command type identifier */
 # define CMD_MESSAGE_DIGEST			1			/* Message digest algorithm */
-# define CMD_CIPHER					2			/* Cipher algorithm */
 
 
 /*	Command identifier */
@@ -72,9 +66,6 @@
 
 typedef struct		s_flag {
 	int				masks_sum;					/* Sum of the bitwise masks */
-	int				pad_0;						/* Padding value */
-	char			*i;							/* Input file */
-	char			*o;							/* Output file */
 	char			*s;							/* Print the sum of the given string */
 }					t_flag;
 

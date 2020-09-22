@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/25 00:58:01 by mapandel          #+#    #+#             */
-/*   Updated: 2020/09/22 01:17:55 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/23 01:06:01 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ static void		parsing_flags(t_ssl *ssl, size_t *argv_i, size_t arg_len)
 	// Filters flags relative to the command type
 	if (ssl->cmd->type == CMD_MESSAGE_DIGEST)
 		parsing_message_digest_flags(ssl, argv_i, arg_len);
-	else if (ssl->cmd->type == CMD_CIPHER)
-		parsing_cipher_flags(ssl, argv_i, arg_len);
 }
 
 /*

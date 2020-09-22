@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/08 17:41:26 by mapandel          #+#    #+#             */
-/*   Updated: 2020/09/21 20:23:40 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/23 01:09:41 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	display_invalid_opt(t_ssl *ssl, char *justification)
 
 	if (ssl->cmd->type == CMD_MESSAGE_DIGEST)
 		display_md_algorithm_usage();
-	else if (ssl->cmd->type == CMD_CIPHER)
-		display_cipher_algorithm_usage();
 }
 
 
@@ -77,8 +75,6 @@ void	display_opt_without_arg(t_ssl *ssl, char *justification)
 
 	if (ssl->cmd->type == CMD_MESSAGE_DIGEST)
 		display_md_algorithm_usage();
-	else if (ssl->cmd->type == CMD_CIPHER)
-		display_cipher_algorithm_usage();
 }
 
 

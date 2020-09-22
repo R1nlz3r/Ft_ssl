@@ -6,7 +6,7 @@
 /*   By: mapandel <mapandel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/06 15:45:56 by mapandel          #+#    #+#             */
-/*   Updated: 2020/09/21 19:46:59 by mapandel         ###   ########.fr       */
+/*   Updated: 2020/09/23 01:08:43 by mapandel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void		del_t_flag(t_flag **flag)
 {
 	if (!(flag && *flag))
 		return ;
-	remove_t_flag_i(*flag);
-	remove_t_flag_o(*flag);
 	remove_t_flag_s(*flag);
 	ft_memdel((void**)flag);
 	*flag = NULL;
@@ -65,45 +63,6 @@ void		remove_t_flag_s(t_flag *flag)
 		ft_strdel(&flag->s);
 }
 
-
-/*
-**	remove_t_flag_o:
-**		Removes the 'o' flag mask to the int sum of bitwise masks
-**			of the t_flag* structure
-**		Frees up the char* parameter of the flag 'o'
-**		The function do not return a value
-*/
-
-void		remove_t_flag_o(t_flag *flag)
-{
-	if (!flag)
-		return ;
-	if (flag->masks_sum & FLAG_O)
-		flag->masks_sum -= FLAG_O;
-	if (flag->o)
-		ft_strdel(&flag->o);
-}
-
-
-/*
-**	remove_t_flag_i:
-**		Removes the 'i' flag mask to the int sum of bitwise masks
-**			of the t_flag* structure
-**		Frees up the char* parameter of the flag 'i'
-**		The function do not return a value
-*/
-
-void		remove_t_flag_i(t_flag *flag)
-{
-	if (!flag)
-		return ;
-	if (flag->masks_sum & FLAG_I)
-		flag->masks_sum -= FLAG_I;
-	if (flag->i)
-		ft_strdel(&flag->i);
-}
-
-
 /*
 **	remove_t_flag_mask:
 **		Removes a mask to the sum of bitwise masks of the t_flag* structure
@@ -115,10 +74,6 @@ void		remove_t_flag_mask(t_flag *flag, int mask_nb)
 {
 	if (!flag || !(flag->masks_sum & mask_nb))
 		return ;
-	if (mask_nb == FLAG_I)
-		remove_t_flag_i(flag);
-	else if (mask_nb == FLAG_O)
-		remove_t_flag_o(flag);
 	else if (mask_nb == FLAG_S)
 		remove_t_flag_s(flag);
 	else
@@ -142,10 +97,6 @@ void		add_t_flag_mask(t_flag *flag, int mask_nb, char *parameter)
 		flag->masks_sum += mask_nb;
 		if (!parameter)
 			return ;
-		if (mask_nb == FLAG_I)
-			flag->i = ft_strdup(parameter);
-		if (mask_nb == FLAG_O)
-			flag->o = ft_strdup(parameter);
 		if (mask_nb == FLAG_S)
 			flag->s = ft_strdup(parameter);
 	}
@@ -167,8 +118,6 @@ t_flag		*init_t_flag(void)
 		return (NULL);
 
 	flag->masks_sum = 0;
-	flag->i = NULL;
-	flag->o = NULL;
 	flag->s = NULL;
 
 	return (flag);
